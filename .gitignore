@@ -1,0 +1,13 @@
+node_modules/
+temp_labels.json
+
+# OS
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo

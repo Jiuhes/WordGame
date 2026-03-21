@@ -1,0 +1,12 @@
+{
+  "games": [
+    {
+      "id": "reanimation",
+      "file": "data/games/reanimation.json",
+      "name": "复活",
+      "icon": "⚰️",
+      "desc": "死而复生",
+      "category": "恐怖悬疑"
+    }
+  ]
+}

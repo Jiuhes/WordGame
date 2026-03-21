@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>游戏大厅</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="assets/css/tailwind.css?v=2" />
+  </head>
+  <body class="lobby-page">
+    <div id="debug"></div>
+    <button class="back-btn" id="backBtn" type="button">← 返回大厅</button>
+    <input
+      id="localGameInput"
+      type="file"
+      accept=".json,application/json"
+      hidden
+    />
+    <div id="modalRoot" class="system-modal-root" hidden>
+      <div class="system-modal-overlay" data-modal-close></div>
+      <div
+        class="window system-modal-window"
+        id="modalWindow"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modalTitle"
+      >
+        <div class="title-bar">
+          <span class="title-text" id="modalTitle">系统对话框</span>
+          <button
+            class="close-btn"
+            id="modalCloseBtn"
+            type="button"
+            aria-label="关闭对话框"
+          >
+            X
+          </button>
+        </div>
+        <div class="menu-bar" id="modalMenuBar">本地模式</div>
+        <div class="content" id="modalContent"></div>
+        <div class="status-bar">
+          <span id="modalStatusText">就绪</span>
+          <span id="modalStatusHint">等待输入</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 大厅 -->
+    <div class="window" id="lobby">
+      <div class="title-bar">
+        <span class="title-text">游戏大厅</span
+        ><span class="close-btn">X</span>
+      </div>
+      <div class="menu-bar">
+        <span class="menu-item has-menu" id="fileMenuTrigger" tabindex="0">
+          文件
+          <div class="menu-dropdown" id="fileMenuDropdown">
+            <button
+              type="button"
+              class="menu-dropdown-item"
+              id="openLocalFileAction"
+            >
+              打开本地 JSON
+            </button>
+            <button
+              type="button"
+              class="menu-dropdown-item"
+              id="pasteLocalJsonAction"
+            >
+              粘贴 JSON
+            </button>
+          </div>
+        </span>
+        <button
+          type="button"
+          class="menu-item menu-link-button"
+          id="openGraphViewAction"
+        >
+          图谱
+        </button>
+        <button
+          type="button"
+          class="menu-item menu-link-button"
+          id="openGuideViewAction"
+        >
+          指南
+        </button>
+        <button
+          type="button"
+          class="menu-item menu-link-button"
+          id="openStatsViewAction"
+        >
+          统计
+        </button>
+        <button
+          type="button"
+          class="menu-item menu-link-button"
+          id="openSettingsViewAction"
+        >
+          设置
+        </button>
+        <button
+          type="button"
+          class="menu-item menu-link-button"
+          id="openAuthorViewAction"
+        >
+          创作者
+        </button>
+      </div>
+      <div class="content">
+        <div id="gameList">加载中...</div>
+      </div>
+      <div class="status-bar">
+        <span id="gameCount">0 个游戏</span><span>就绪</span>
+      </div>
+    </div>
+
+    <!-- 游戏容器 -->
+    <div class="window" id="gameContainer" style="display: none">
+      <div class="title-bar">
+        <span class="title-text" id="gameTitle">游戏</span>
+        <button
+          class="close-btn"
+          id="closeGameBtn"
+          type="button"
+          aria-label="关闭游戏"
+        >
+          X
+        </button>
+      </div>
+      <div class="menu-bar">
+        <button
+          type="button"
+          class="menu-item menu-link-button"
+          id="openSaveViewActionGame"
+        >
+          存档
+        </button>
+        <button
+          type="button"
+          class="menu-item menu-link-button"
+          id="openStatsViewActionGame"
+        >
+          统计
+        </button>
+        <button
+          type="button"
+          class="menu-item menu-link-button"
+          id="openSettingsViewActionGame"
+        >
+          设置
+        </button>
+        <button
+          type="button"
+          class="menu-item menu-link-button"
+          id="openAuthorViewActionGame"
+        >
+          创作者
+        </button>
+      </div>
+      <div class="content">
+        <div class="status-bar game-status-bar" id="statusBar"></div>
+        <div id="gameContent"><div class="loading">正在加载...</div></div>
+    </div>
+    <div class="status-bar"><span>实时存档</span><span>运行中</span></div>
+  </div>
+
+    <script>
+      // 调试输出 - 默认隐藏
+      function log(msg) {
+        console.log(msg);
+      }
+      log("页面加载开始");
+    </script>
+    <script type="module" src="assets/js/game.js?v=21"></script>
+    <script>
+      log("JS加载完成");
+    </script>
+  </body>
+</html>

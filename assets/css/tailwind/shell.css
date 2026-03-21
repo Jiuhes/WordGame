@@ -1,0 +1,207 @@
+@layer components {
+  .container {
+    @apply mx-auto max-w-[600px] w-full;
+  }
+
+  .subtitle {
+    @apply mb-4 text-center text-xs text-slate-500 tracking-wide;
+  }
+
+  .window {
+    @apply mx-auto my-8 max-w-[550px] flex flex-col rounded-xl border border-white/50 bg-gradient-to-b from-white/30 to-black/10 shadow-[0_15px_40px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.7)] backdrop-blur-[12px] p-[6px] text-slate-900;
+  }
+
+  .title-bar {
+    @apply flex items-center justify-between px-2 py-1 mb-[4px] select-none;
+  }
+
+  .title-text {
+    @apply text-sm font-semibold tracking-wide text-white drop-shadow-[0_0_4px_rgba(255,255,255,0.3)] shadow-black drop-shadow-[0_0_2px_rgba(0,0,0,0.8)];
+  }
+
+  .close-btn {
+    @apply relative h-[18px] w-[36px] flex items-center justify-center rounded-md border border-red-700/60 bg-gradient-to-b from-[#e36c64] to-[#c62828] text-white font-bold text-[10px] leading-none shadow-[inset_0_1px_2px_rgba(255,255,255,0.5)] hover:from-[#f0857d] hover:to-[#db3232] hover:shadow-[0_0_6px_rgba(255,0,0,0.8),inset_0_1px_2px_rgba(255,255,255,0.6)] active:from-[#b02222] active:to-[#911a1a] active:shadow-[inset_0_1px_3px_rgba(0,0,0,0.5)] transition-all cursor-pointer;
+  }
+
+  .menu-bar {
+    @apply relative flex items-center gap-2 border-b border-gray-300 bg-gradient-to-b from-[#f5f8fa] to-[#e6eaee] px-2 py-1 text-xs text-slate-700 rounded-t-md shadow-[inset_0_1px_0_rgba(255,255,255,1)];
+  }
+
+  .menu-item {
+    @apply relative inline-flex cursor-pointer items-center rounded-sm px-2 py-1 no-underline transition-colors duration-150 hover:bg-sky-200/50 hover:border-sky-300 hover:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.8)] focus:bg-sky-200 focus:outline-hidden;
+  }
+
+  .menu-link-button {
+    @apply border border-transparent bg-transparent p-1 font-sans text-slate-700 hover:bg-sky-200/50 hover:border-sky-300 hover:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.8)] active:bg-sky-300;
+  }
+
+  .menu-dropdown {
+    @apply absolute left-0 top-[calc(100%+1px)] z-20 hidden min-w-[160px] flex-col rounded-sm border border-gray-300 bg-white/95 backdrop-blur-md shadow-[2px_4px_10px_rgba(0,0,0,0.2)];
+  }
+
+  .menu-dropdown.open {
+    @apply flex;
+  }
+
+  .menu-dropdown-item {
+    @apply w-full cursor-pointer border-0 bg-transparent px-3 py-1.5 text-left text-xs text-slate-800 hover:bg-[#cce8ff] hover:text-slate-900 focus:bg-[#cce8ff] focus:outline-hidden transition-colors;
+  }
+
+  .content {
+    @apply p-5 text-slate-800 bg-white min-h-[250px];
+  }
+
+  .section-title,
+  .tool-title,
+  .graph-panel-title {
+    @apply bg-slate-100 border-b border-gray-200 px-3 py-1.5 text-[11px] font-semibold text-sky-800 uppercase tracking-wider mb-4 rounded-sm shadow-sm;
+  }
+
+  .game-item {
+    @apply mb-3 w-full flex cursor-pointer items-center gap-4 rounded-lg border border-transparent p-3 text-left transition-all duration-200 hover:bg-sky-50/60 hover:border-sky-300 hover:shadow-[0_2px_5px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,1)] focus:border-sky-400 focus:outline-hidden;
+  }
+
+  .game-icon {
+    @apply text-[28px] drop-shadow-[0_2px_4px_rgba(0,0,0,0.15)] transition-transform duration-200;
+  }
+
+  .game-item:hover .game-icon {
+    @apply -translate-y-0.5;
+  }
+
+  .game-item:hover .game-name {
+    @apply text-blue-700;
+  }
+
+  .game-meta {
+    @apply flex-1 overflow-hidden;
+  }
+
+  .game-card-topline {
+    @apply mb-1 flex flex-wrap items-center gap-2;
+  }
+
+  .game-category-badge {
+    @apply inline-block rounded-full border border-sky-300 bg-gradient-to-b from-sky-50 to-sky-100 px-2 py-0.5 text-[10px] font-medium text-sky-800 shadow-sm;
+  }
+
+  .game-id-tag {
+    @apply inline-block text-[10px] text-slate-400 uppercase tracking-wider font-mono;
+  }
+  
+  .game-stat-pill {
+    @apply inline-block rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5 text-[10px] text-slate-500 shadow-sm;
+  }
+
+  .game-name {
+    @apply text-[15px] font-semibold text-[#003399] tracking-wide mb-[2px] truncate group-hover:text-blue-700;
+  }
+
+  .game-desc,
+  .loading {
+    @apply text-[12px] text-slate-500 truncate animate-none;
+  }
+
+  .game-item:hover .game-desc {
+    @apply text-slate-600;
+  }
+
+  .game-card-stats {
+    @apply mt-2 flex flex-wrap gap-2;
+  }
+
+  .status-bar {
+    @apply flex items-center justify-between border-t border-gray-300 bg-gradient-to-b from-[#f0f0f0] to-[#e4e4e4] px-3 py-1.5 text-xs text-slate-600 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] rounded-b-md;
+  }
+
+  .system-modal-btn,
+  .tool-link-btn,
+  .graph-button,
+  .back-btn {
+    @apply inline-flex cursor-pointer items-center justify-center rounded-[3px] border border-gray-400 bg-gradient-to-b from-[#f9f9f9] to-[#e0e0e0] px-4 py-1.5 text-xs text-slate-800 shadow-[0_1px_2px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.8)] hover:border-sky-400 hover:from-[#eaf6fd] hover:to-[#d7f0fe] hover:shadow-[0_1px_2px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.9)] active:from-[#cce8ff] active:to-[#b3d9ff] active:shadow-[inset_0_1px_3px_rgba(0,0,0,0.2)] focus:outline-hidden focus:ring-1 focus:ring-sky-400 transition-all duration-100;
+  }
+
+  .back-btn {
+    @apply fixed right-4 top-4 z-[100] hidden px-3 py-1.5 shadow-[0_4px_10px_rgba(0,0,0,0.2)];
+  }
+
+  .loading {
+    @apply p-8 text-center text-sm text-sky-700 animate-none;
+  }
+
+  /* SYSTEM MODAL (Aero Glass Dialog) */
+  .system-modal-root {
+    @apply fixed inset-0 z-[1000] flex items-center justify-center p-4;
+  }
+
+  .system-modal-root[hidden] {
+    @apply hidden;
+  }
+
+  .system-modal-overlay {
+    @apply absolute inset-0 bg-black/40 backdrop-blur-[2px];
+  }
+
+  .system-modal-window {
+    @apply relative z-10 m-0 flex max-h-[90vh] w-full max-w-[500px] flex-col rounded-xl border border-white/50 bg-gradient-to-b from-white/40 to-black/10 shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_1px_1px_rgba(255,255,255,0.8)] backdrop-blur-[15px] p-[6px];
+  }
+
+  .system-modal-window.wide {
+    @apply max-w-[800px];
+  }
+
+  .system-modal-window.xwide {
+    @apply max-w-[1024px];
+  }
+
+  .system-modal-window .content {
+    @apply min-h-[100px] flex-1 overflow-auto p-5 bg-white border border-gray-300;
+  }
+
+  .system-modal-copy {
+    @apply mb-4 text-[13px] leading-relaxed text-slate-700;
+  }
+
+  .system-modal-actions {
+    @apply mt-4 flex flex-wrap justify-end gap-2 bg-slate-100/40 p-3 -mx-5 -mb-5 border-t border-gray-300;
+  }
+
+  .system-modal-btn.primary {
+    @apply border-sky-600 bg-gradient-to-b from-[#7bc4ff] to-[#3a93ea] text-white font-medium shadow-[0_1px_2px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.5)] hover:from-[#8fd0ff] hover:to-[#4aa1e8] active:from-[#2e7acf] active:to-[#1a5b9c] active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)];
+  }
+
+  .system-modal-input,
+  .system-modal-textarea {
+    @apply w-full rounded-[3px] border border-gray-400 px-3 py-2 text-[13px] text-slate-800 bg-white shadow-[inset_0_1px_3px_rgba(0,0,0,0.1)] hover:border-sky-400 focus:border-sky-500 focus:outline-hidden focus:ring-1 focus:ring-sky-500 transition-colors duration-150;
+  }
+
+  .system-modal-textarea {
+    @apply min-h-[150px] resize-y;
+  }
+
+  .system-modal-choice-list {
+    @apply grid gap-2;
+  }
+
+  .system-modal-choice {
+    @apply w-full text-left font-medium rounded-md;
+  }
+
+  .lobby-page.modal-open {
+    @apply overflow-hidden;
+  }
+
+  .lobby-page.modal-open #lobby,
+  .lobby-page.modal-open #gameContainer,
+  .lobby-page.modal-open #backBtn {
+    @apply pointer-events-none opacity-60 saturate-50;
+  }
+
+  /* Custom Scrollbar for Win7 Feel */
+  ::-webkit-scrollbar {
+    @apply w-[14px] h-[14px] bg-[#f0f0f0] border-l border-gray-300;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gradient-to-r from-[#e8e8e8] to-[#cecece] rounded-full border-[3px] border-solid border-[#f0f0f0] hover:from-[#dbeaf9] hover:to-[#b6d6f2] hover:border-[#e3f0fa];
+  }
+}

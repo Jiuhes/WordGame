@@ -1,0 +1,63 @@
+{
+  "title": "新游戏标题",
+  "subtitle": "一句话副标题",
+  "entryScene": "intro",
+  "status": [
+    {
+      "key": "sanity",
+      "label": "理智",
+      "value": 100,
+      "max": 100
+    },
+    {
+      "key": "clues",
+      "label": "线索",
+      "value": 0,
+      "max": 10
+    }
+  ],
+  "initialState": {
+    "sanity": 100,
+    "clues": 0
+  },
+  "scenes": {
+    "intro": {
+      "title": "开始",
+      "contentBlocks": [
+        {
+          "type": "narrator",
+          "text": "你站在故事开始的地方。"
+        },
+        {
+          "type": "danger",
+          "text": "空气里有不对劲的味道。"
+        }
+      ],
+      "choices": [
+        {
+          "text": "继续前进",
+          "next": "next_scene",
+          "effects": {
+            "sanity": -5
+          }
+        }
+      ]
+    },
+    "next_scene": {
+      "title": "下一幕",
+      "contentBlocks": [
+        {
+          "type": "narrator",
+          "text": "这里继续写你的主线内容。"
+        }
+      ],
+      "choices": [
+        {
+          "text": "返回开头",
+          "next": "intro",
+          "reset": true
+        }
+      ]
+    }
+  }
+}

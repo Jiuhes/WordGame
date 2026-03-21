@@ -1,0 +1,4 @@
+interface:
+  display_name: "WordGame 游戏创作"
+  short_description: "按本仓库规范创建 JSON 游戏"
+  default_prompt: "使用 $wordgame-authoring 按这个 WordGame 仓库的规范创建或扩写一个 JSON 游戏。"

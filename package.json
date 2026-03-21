@@ -1,0 +1,25 @@
+{
+  "name": "wordgame",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:css": "tailwindcss -i ./assets/css/tailwind-source.css -o ./assets/css/tailwind.css --minify",
+    "lint:content": "node scripts/content-lint.mjs",
+    "find:duplicate-copy": "node scripts/find-duplicate-copy.mjs",
+    "find:placeholders": "node scripts/find-placeholder-scenes.mjs",
+    "find:undeclared-keys": "node scripts/find-undeclared-status-keys.mjs",
+    "migrate:content-blocks": "node scripts/migrate-content-blocks.mjs",
+    "new:game": "node scripts/new-game.mjs",
+    "validate:content": "node scripts/validate-content.mjs",
+    "watch:css": "tailwindcss -i ./assets/css/tailwind-source.css -o ./assets/css/tailwind.css --watch",
+    "format:check": "npx prettier --check \"*.{html,md}\" \"assets/**/*.{css,js}\" \"data/**/*.json\" \"schemas/**/*.json\" \"scripts/**/*.mjs\""
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.2.2",
+    "ajv": "^8.18.0",
+    "parse5": "^8.0.0",
+    "playwright": "^1.58.2",
+    "prettier": "^3.8.1",
+    "tailwindcss": "^4.2.2"
+  }
+}

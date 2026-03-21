@@ -1,0 +1,283 @@
+@layer components {
+  .tool-layout {
+    @apply grid items-start gap-4;
+    grid-template-columns: 220px minmax(0, 1fr);
+  }
+
+  .tool-nav,
+  .tool-panel,
+  .graph-toolbar,
+  .graph-summary,
+  .graph-board,
+  .graph-inspector,
+  .graph-panel {
+    @apply p-4 text-slate-800 bg-white border border-gray-300 rounded-[5px] shadow-[0_2px_10px_rgba(0,0,0,0.06)];
+  }
+
+  .tool-nav a {
+    @apply block rounded-md px-2 py-1.5 text-sm text-slate-700 font-medium transition-colors duration-150 hover:bg-sky-100 hover:text-sky-900 focus:bg-sky-200 focus:outline-hidden;
+  }
+
+  .tool-panel + .tool-panel {
+    @apply mt-4;
+  }
+
+  .tool-panel pre {
+    @apply mt-3 overflow-auto bg-slate-50 p-3 text-[13px] leading-[1.6] text-slate-800 border border-gray-300 rounded-md shadow-inner font-mono;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .tool-panel code {
+    @apply text-pink-600 bg-slate-100 px-1 py-0.5 rounded-[3px] border border-gray-200;
+    font-family: Consolas, "Courier New", monospace;
+  }
+
+  .tool-panel p,
+  .tool-panel li,
+  .tool-panel td {
+    @apply text-[14px] leading-[1.6] text-slate-800;
+  }
+
+  .tool-panel h2 {
+    @apply mb-3 text-[20px] font-semibold text-sky-900 border-b border-gray-200 pb-2;
+  }
+
+  .tool-panel h3 {
+    @apply mt-4 mb-2 text-base font-medium text-sky-800;
+  }
+
+  .tool-lead {
+    @apply mb-3 text-[13px] leading-[1.6] text-slate-600;
+  }
+
+  .tool-panel ul,
+  .tool-panel ol {
+    @apply mt-2 pl-5 list-disc text-slate-700 marker:text-sky-500;
+  }
+
+  .tool-panel table {
+    @apply mt-3 w-full border-collapse bg-white text-sm shadow-sm;
+  }
+
+  .tool-panel th,
+  .tool-panel td {
+    @apply border border-gray-300 px-3 py-2 text-left align-top;
+  }
+
+  .tool-panel th {
+    @apply bg-slate-100 font-semibold text-slate-800;
+  }
+
+  .tool-note {
+    @apply mt-3 border-l-4 border-amber-400 bg-amber-50 p-3 text-[13px] text-amber-900 rounded-r-md;
+  }
+
+  .tool-panel-stats {
+    @apply bg-gradient-to-br from-white to-slate-50 border border-gray-200;
+  }
+
+  .tool-panel-saves {
+    @apply bg-white border border-gray-300 shadow-sm;
+  }
+
+  .tool-panel-saves .tool-title,
+  .tool-panel-author .tool-title {
+    @apply text-sky-900 border-b border-gray-200 bg-transparent px-0 py-1 mb-3 text-lg font-semibold capitalize;
+  }
+
+  .tool-panel-saves .tool-lead {
+    @apply text-slate-600;
+  }
+
+  .tool-panel-author {
+    @apply bg-white border border-gray-300 shadow-sm;
+  }
+
+  .tool-panel-author .tool-lead {
+    @apply text-slate-600;
+  }
+
+  .tool-panel-saves .graph-label,
+  .tool-panel-author .graph-label {
+    @apply text-slate-700 font-medium;
+  }
+
+  .tool-panel-saves .author-choice-card,
+  .tool-panel-author .author-choice-card {
+    @apply bg-slate-50 border border-gray-200 shadow-none;
+  }
+
+  .tool-actions,
+  .graph-toolbar-row,
+  .graph-summary {
+    @apply flex flex-wrap gap-2;
+  }
+
+  .tool-actions {
+    @apply mt-4 pt-3 border-t border-gray-200;
+  }
+
+  .graph-toolbar,
+  .graph-summary,
+  .graph-board,
+  .graph-inspector {
+    @apply mb-4;
+  }
+
+  .graph-board {
+    @apply min-h-[560px] bg-slate-50 border border-gray-300 rounded-md p-0 overflow-hidden shadow-inner;
+  }
+
+  .graph-empty {
+    @apply px-5 py-[60px] text-center text-sm text-slate-500;
+  }
+
+  .graph-focus-grid {
+    @apply grid items-start gap-4;
+    grid-template-columns: 240px minmax(280px, 360px) minmax(360px, 1fr);
+  }
+
+  .graph-toolbar-row {
+    @apply items-center gap-3;
+  }
+
+  .graph-label,
+  .graph-toolbar-note,
+  .graph-muted {
+    @apply text-xs text-slate-600 font-medium;
+  }
+
+  .graph-input,
+  .graph-select {
+    @apply min-w-[180px] bg-white px-2 py-1.5 text-sm text-slate-800 rounded-[3px] border border-gray-400 shadow-[inset_0_1px_2px_rgba(0,0,0,0.05)] focus:border-sky-500 focus:outline-hidden focus:ring-1 focus:ring-sky-500;
+  }
+
+  .graph-toolbar-note {
+    @apply mt-2 leading-[1.6];
+  }
+
+  .graph-pill,
+  .graph-badge,
+  .graph-breadcrumb {
+    @apply inline-block rounded-full border border-sky-200 bg-sky-50 px-2.5 py-0.5 text-[11px] font-semibold text-sky-800 shadow-sm cursor-pointer hover:bg-sky-100 hover:border-sky-300 transition-colors;
+  }
+
+  .graph-panel {
+    @apply bg-slate-100 border border-gray-300 shadow-sm p-3 rounded-md;
+  }
+
+  .graph-node {
+    @apply cursor-pointer p-3 text-xs text-slate-800 transition-all duration-200 rounded-[4px] bg-white border border-gray-300 shadow-sm hover:border-sky-400 hover:shadow-md hover:-translate-y-[1px];
+  }
+
+  .graph-node.selected {
+    @apply !bg-sky-50 !border-sky-500 shadow-[0_0_0_1px_rgba(14,165,233,0.5)] !text-sky-900;
+  }
+
+  .graph-node.compact {
+    @apply p-[8px];
+  }
+
+  .graph-node.path-node {
+    @apply relative border-blue-400 bg-blue-50/50 shadow-sm;
+  }
+
+  .graph-node.path-node::after {
+    content: "";
+    @apply absolute left-[15px] bottom-[-14px] w-[2px] h-[14px] bg-sky-400;
+  }
+
+  .graph-node.path-node:last-child::after {
+    @apply hidden;
+  }
+
+  .graph-node.unreachable {
+    @apply border-l-4 border-l-amber-500 opacity-60;
+  }
+
+  .graph-node.ending {
+    @apply border-l-4 border-l-emerald-500 bg-emerald-50/30;
+  }
+
+  .graph-node.oversized {
+    @apply border-r-4 border-r-indigo-500;
+  }
+
+  .graph-node.conditional {
+    @apply border-dashed border-2 border-purple-400;
+  }
+
+  .graph-node.problem {
+    @apply border-l-4 border-l-red-600 bg-red-50/50;
+  }
+
+  .graph-node-id {
+    @apply break-words font-bold text-sky-900 text-[13px] mb-1 block;
+  }
+
+  .graph-node-title {
+    @apply mt-1 break-words text-slate-600 font-medium;
+  }
+
+  .graph-node.selected .graph-node-title {
+    @apply text-sky-800;
+  }
+
+  .graph-node:hover .graph-node-title {
+    @apply text-slate-800;
+  }
+
+  .graph-node-meta,
+  .graph-breadcrumbs,
+  .graph-jump-list,
+  .graph-choice-meta,
+  .graph-branch-actions {
+    @apply mt-2 flex flex-wrap gap-1.5;
+  }
+
+  .graph-branch-item,
+  .graph-current-card {
+    @apply p-4 bg-white border border-gray-300 rounded-md shadow-sm;
+  }
+
+  .graph-choice-text {
+    @apply mb-2 border-l-4 border-sky-500 pl-3 text-[13px] leading-[1.6] text-slate-700 bg-slate-50 py-1;
+  }
+
+  .graph-link-button {
+    @apply inline-flex cursor-pointer items-center justify-center rounded-[3px] border border-gray-400 bg-gradient-to-b from-[#f9f9f9] to-[#e0e0e0] px-3 py-1 text-xs font-semibold text-slate-800 shadow-[0_1px_2px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.8)] hover:border-sky-400 hover:from-[#eaf6fd] hover:to-[#d7f0fe] active:from-[#cce8ff] active:to-[#b3d9ff];
+  }
+
+  .graph-current-title {
+    @apply text-[18px] font-bold text-sky-900 border-b border-gray-200 pb-1 mb-2;
+  }
+
+  .graph-current-subtitle {
+    @apply mt-1 text-[13px] text-slate-500;
+  }
+
+  .graph-current-copy {
+    @apply mt-3 text-[13px] leading-[1.7] text-slate-800;
+  }
+
+  .graph-inspector h2 {
+    @apply mb-3 text-[18px] font-semibold text-sky-900 border-b border-gray-200 pb-1;
+  }
+
+  .graph-inspector p,
+  .graph-inspector li {
+    @apply text-[13px] leading-[1.6] text-slate-700;
+  }
+
+  .graph-inspector ul {
+    @apply mt-2 pl-5 list-disc marker:text-sky-500;
+  }
+
+  @media (max-width: 960px) {
+    .tool-layout,
+    .graph-focus-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+}

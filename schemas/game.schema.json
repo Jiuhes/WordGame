@@ -1,0 +1,257 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wordgame.local/schemas/game.schema.json",
+  "title": "Word Game",
+  "type": "object",
+  "required": ["title", "scenes"],
+  "additionalProperties": true,
+  "properties": {
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "subtitle": {
+      "type": "string"
+    },
+    "entryScene": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["key", "label"],
+        "additionalProperties": true,
+        "properties": {
+          "key": {
+            "type": "string",
+            "minLength": 1
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1
+          },
+          "value": {},
+          "max": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "initialState": {
+      "type": "object"
+    },
+    "scenes": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "$ref": "#/$defs/scene"
+      }
+    }
+  },
+  "$defs": {
+    "scene": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "contentBlocks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/contentBlock"
+          }
+        },
+        "choices": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/choice"
+          }
+        },
+        "conditions": {
+          "$ref": "#/$defs/condition"
+        },
+        "disabledReason": {
+          "type": "string"
+        }
+      },
+      "allOf": [
+        {
+          "anyOf": [
+            {
+              "required": ["content"]
+            },
+            {
+              "required": ["contentBlocks"]
+            }
+          ]
+        }
+      ]
+    },
+    "contentBlock": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "narrator",
+            "danger",
+            "safe",
+            "clue",
+            "item",
+            "ghost",
+            "boss",
+            "hero",
+            "rival",
+            "zombie",
+            "wife",
+            "husband",
+            "secret",
+            "dialogue",
+            "raw-html"
+          ]
+        },
+        "text": {
+          "type": "string"
+        },
+        "html": {
+          "type": "string"
+        },
+        "speaker": {
+          "type": "string",
+          "minLength": 1
+        },
+        "eyebrow": {
+          "type": "string",
+          "minLength": 1
+        },
+        "emphasis": {
+          "type": "string",
+          "enum": ["low", "medium", "high"]
+        },
+        "aside": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "anyOf": [
+        {
+          "required": ["type", "text"]
+        },
+        {
+          "required": ["type", "html"]
+        }
+      ]
+    },
+    "choice": {
+      "type": "object",
+      "required": ["text"],
+      "additionalProperties": true,
+      "properties": {
+        "text": {
+          "type": "string",
+          "minLength": 1
+        },
+        "next": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reset": {
+          "type": "boolean"
+        },
+        "effects": {
+          "type": "object"
+        },
+        "conditions": {
+          "$ref": "#/$defs/condition"
+        },
+        "visibility": {
+          "$ref": "#/$defs/condition"
+        },
+        "disabledReason": {
+          "type": "string"
+        },
+        "once": {
+          "type": "boolean"
+        }
+      }
+    },
+    "conditionRule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key", "op"],
+      "properties": {
+        "key": {
+          "type": "string",
+          "minLength": 1
+        },
+        "op": {
+          "type": "string",
+          "enum": [
+            "eq",
+            "ne",
+            "gt",
+            "gte",
+            "lt",
+            "lte",
+            "includes",
+            "notIncludes",
+            "exists"
+          ]
+        },
+        "value": {}
+      }
+    },
+    "condition": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/conditionRule"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["all"],
+          "properties": {
+            "all": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "$ref": "#/$defs/condition"
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["any"],
+          "properties": {
+            "any": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "$ref": "#/$defs/condition"
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["not"],
+          "properties": {
+            "not": {
+              "$ref": "#/$defs/condition"
+            }
+          }
+        }
+      ]
+    }
+  }
+}
