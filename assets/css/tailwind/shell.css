@@ -8,35 +8,35 @@
   }
 
   .window {
-    @apply mx-auto my-8 max-w-[550px] flex flex-col rounded-xl border border-white/50 bg-gradient-to-b from-white/30 to-black/10 shadow-[0_15px_40px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.7)] backdrop-blur-[12px] p-[6px] text-slate-900;
+    @apply mx-auto my-0 flex w-full flex-col rounded-none border-0 border-black/40 bg-gradient-to-b from-white/30 to-[#92bcd3]/50 p-1 text-slate-900 shadow-[0_12px_24px_rgba(0,0,0,0.5),inset_0_1px_1px_rgba(255,255,255,0.8),inset_1px_0_1px_rgba(255,255,255,0.5),inset_-1px_0_1px_rgba(255,255,255,0.5)] backdrop-blur-[8px] min-h-[100dvh] sm:min-h-0 sm:w-[94vw] lg:w-[min(94vw,1100px)] sm:my-4 sm:rounded-[8px] sm:border sm:p-[8px] md:my-6;
   }
 
   .title-bar {
-    @apply flex items-center justify-between px-2 py-1 mb-[4px] select-none;
+    @apply flex items-center justify-between px-2 pt-1 pb-2 select-none gap-2;
   }
 
   .title-text {
-    @apply text-sm font-semibold tracking-wide text-white drop-shadow-[0_0_4px_rgba(255,255,255,0.3)] shadow-black drop-shadow-[0_0_2px_rgba(0,0,0,0.8)];
+    @apply text-[12px] font-semibold text-black drop-shadow-[0_0_8px_rgba(255,255,255,1)];
   }
 
   .close-btn {
-    @apply relative h-[18px] w-[36px] flex items-center justify-center rounded-md border border-red-700/60 bg-gradient-to-b from-[#e36c64] to-[#c62828] text-white font-bold text-[10px] leading-none shadow-[inset_0_1px_2px_rgba(255,255,255,0.5)] hover:from-[#f0857d] hover:to-[#db3232] hover:shadow-[0_0_6px_rgba(255,0,0,0.8),inset_0_1px_2px_rgba(255,255,255,0.6)] active:from-[#b02222] active:to-[#911a1a] active:shadow-[inset_0_1px_3px_rgba(0,0,0,0.5)] transition-all cursor-pointer;
+    @apply relative h-[20px] w-[45px] flex items-center justify-center rounded-tr-[5px] rounded-tl-[2px] rounded-b-[2px] border border-[#a23232] bg-gradient-to-b from-[#e8908f] to-[#c12525] text-white font-bold text-[10px] leading-none shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)] hover:from-[#f5a2a1] hover:to-[#e33535] hover:shadow-[0_0_8px_rgba(255,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.9)] active:from-[#b02222] active:to-[#911a1a] active:scale-95 transition-all duration-75 cursor-pointer translate-y-[1px];
   }
 
   .menu-bar {
-    @apply relative flex items-center gap-2 border-b border-gray-300 bg-gradient-to-b from-[#f5f8fa] to-[#e6eaee] px-2 py-1 text-xs text-slate-700 rounded-t-md shadow-[inset_0_1px_0_rgba(255,255,255,1)];
+    @apply relative flex flex-wrap items-center gap-[2px] border border-b-0 border-[#cfcfcf] bg-[#f0f0f0] px-2 py-0.5 text-[12px] text-slate-800 rounded-t-none;
   }
 
   .menu-item {
-    @apply relative inline-flex cursor-pointer items-center rounded-sm px-2 py-1 no-underline transition-colors duration-150 hover:bg-sky-200/50 hover:border-sky-300 hover:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.8)] focus:bg-sky-200 focus:outline-hidden;
+    @apply relative inline-flex cursor-pointer items-center rounded-[2px] px-2 py-1 no-underline transition-colors duration-150 hover:bg-[#cce8ff] hover:border-[#99d1ff] border border-transparent hover:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.8)] focus:bg-[#cce8ff] focus:outline-hidden;
   }
 
   .menu-link-button {
-    @apply border border-transparent bg-transparent p-1 font-sans text-slate-700 hover:bg-sky-200/50 hover:border-sky-300 hover:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.8)] active:bg-sky-300;
+    @apply border border-transparent bg-transparent px-2 py-1 font-sans text-slate-800 transition-colors duration-150 hover:bg-[#cce8ff] hover:border-[#99d1ff] hover:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.8)] active:bg-[#99d1ff] rounded-[2px];
   }
 
   .menu-dropdown {
-    @apply absolute left-0 top-[calc(100%+1px)] z-20 hidden min-w-[160px] flex-col rounded-sm border border-gray-300 bg-white/95 backdrop-blur-md shadow-[2px_4px_10px_rgba(0,0,0,0.2)];
+    @apply absolute left-0 top-full z-20 hidden min-w-[160px] flex-col rounded-[2px] border border-gray-400 bg-[#f2f2f2] shadow-[2px_4px_10px_rgba(0,0,0,0.3)];
   }
 
   .menu-dropdown.open {
@@ -44,29 +44,45 @@
   }
 
   .menu-dropdown-item {
-    @apply w-full cursor-pointer border-0 bg-transparent px-3 py-1.5 text-left text-xs text-slate-800 hover:bg-[#cce8ff] hover:text-slate-900 focus:bg-[#cce8ff] focus:outline-hidden transition-colors;
+    @apply w-full cursor-pointer border-0 bg-transparent px-3 py-1.5 text-left text-xs text-slate-800 hover:bg-[#3399ff] hover:text-white focus:bg-[#3399ff] focus:text-white focus:outline-hidden transition-colors duration-100;
   }
 
   .content {
-    @apply p-5 text-slate-800 bg-white min-h-[250px];
+    @apply flex-1 min-h-[250px] bg-white border-0 sm:border sm:border-[#828790] p-2 sm:p-5 text-slate-800 z-10 relative shadow-none sm:shadow-[0_-1px_3px_rgba(0,0,0,0.05)];
+  }
+
+  #lobby {
+    @apply max-w-full sm:max-w-[980px];
+  }
+
+  #lobby .content {
+    @apply min-h-[560px] bg-white border-0 sm:border sm:border-[#828790];
+  }
+
+  #gameContainer {
+    @apply max-w-full sm:max-w-[920px];
+  }
+
+  #gameContainer .content {
+    @apply min-h-[640px] bg-white border-0 sm:border sm:border-[#828790];
   }
 
   .section-title,
   .tool-title,
   .graph-panel-title {
-    @apply bg-slate-100 border-b border-gray-200 px-3 py-1.5 text-[11px] font-semibold text-sky-800 uppercase tracking-wider mb-4 rounded-sm shadow-sm;
+    @apply bg-slate-100 border-b border-gray-200 px-3 py-1.5 text-[11px] font-semibold text-sky-800 uppercase tracking-wider mb-4 rounded-sm shadow-sm transition-all duration-300;
   }
 
   .game-item {
-    @apply mb-3 w-full flex cursor-pointer items-center gap-4 rounded-lg border border-transparent p-3 text-left transition-all duration-200 hover:bg-sky-50/60 hover:border-sky-300 hover:shadow-[0_2px_5px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,1)] focus:border-sky-400 focus:outline-hidden;
+    @apply flex w-full cursor-pointer items-start gap-3 p-1.5 text-left border border-transparent rounded-[2px] transition-all duration-200 hover:border-[#70c0e7] hover:bg-[#e5f3fb] hover:-translate-y-[1px] hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)] focus:border-[#99d1ff] focus:bg-[#cce8ff] focus:outline-hidden md:gap-4 md:p-2;
   }
 
   .game-icon {
-    @apply text-[28px] drop-shadow-[0_2px_4px_rgba(0,0,0,0.15)] transition-transform duration-200;
+    @apply flex h-10 w-10 items-center justify-center text-[28px] text-[#0f3c74] transition-transform duration-300 md:h-12 md:w-12 md:text-[32px];
   }
 
   .game-item:hover .game-icon {
-    @apply -translate-y-0.5;
+    @apply translate-y-0;
   }
 
   .game-item:hover .game-name {
@@ -77,29 +93,81 @@
     @apply flex-1 overflow-hidden;
   }
 
+  .lobby-intro {
+    @apply grid gap-3 border border-[#d9d9d9] bg-[#fbfbfb] p-4 md:grid-cols-[minmax(0,1.6fr)_minmax(260px,0.8fr)] md:p-6 md:gap-4;
+  }
+
+  .lobby-intro-copy {
+    @apply min-w-0;
+  }
+
+  .lobby-intro-eyebrow {
+    @apply text-[10px] font-semibold uppercase tracking-[0.32em] text-sky-700;
+  }
+
+  .lobby-intro-title {
+    @apply mt-2 text-[24px] font-semibold tracking-[0.02em] text-slate-900 md:text-[34px];
+  }
+
+  .lobby-intro-text {
+    @apply mt-2 max-w-[56ch] text-[14px] leading-6 text-slate-600 md:mt-3 md:leading-7;
+  }
+
+  .lobby-intro-footnote {
+    @apply mt-4 border border-[#e0e0e0] bg-[#f0f0f0] px-4 py-3 text-[12px] text-slate-800 rounded-[2px];
+  }
+
+  .lobby-summary {
+    @apply grid grid-cols-3 gap-2 self-start md:grid-cols-1 md:gap-3;
+  }
+
+  .lobby-summary-card {
+    @apply rounded-[2px] border border-[#d9d9d9] bg-white px-2 py-3 md:px-4 md:py-4;
+  }
+
+  .lobby-summary-label {
+    @apply block text-[9px] font-semibold uppercase tracking-wider text-slate-500 md:text-[10px] md:tracking-[0.24em];
+  }
+
+  .lobby-summary-value {
+    @apply mt-1 block text-[20px] font-bold text-slate-900 md:mt-2 md:text-[28px];
+  }
+
+  .lobby-library {
+    @apply mt-5;
+  }
+
+  .lobby-library-title {
+    @apply mb-3 text-[11px] font-semibold uppercase tracking-[0.24em] text-white/92;
+  }
+
+  .lobby-game-grid {
+    @apply grid grid-cols-2 gap-2 md:gap-4;
+  }
+
   .game-card-topline {
     @apply mb-1 flex flex-wrap items-center gap-2;
   }
 
   .game-category-badge {
-    @apply inline-block rounded-full border border-sky-300 bg-gradient-to-b from-sky-50 to-sky-100 px-2 py-0.5 text-[10px] font-medium text-sky-800 shadow-sm;
+    @apply inline-block border border-[#a6d1ef] bg-[#eef7fc] px-1 py-0.5 text-[11px] text-[#2c719e] rounded-[2px];
   }
 
   .game-id-tag {
     @apply inline-block text-[10px] text-slate-400 uppercase tracking-wider font-mono;
   }
-  
+
   .game-stat-pill {
-    @apply inline-block rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5 text-[10px] text-slate-500 shadow-sm;
+    @apply inline-block border border-[#dfdfdf] bg-[#f7f7f7] px-1 py-0.5 text-[11px] text-slate-600 rounded-[2px];
   }
 
   .game-name {
-    @apply text-[15px] font-semibold text-[#003399] tracking-wide mb-[2px] truncate group-hover:text-blue-700;
+    @apply mb-1 truncate text-[14px] font-semibold tracking-[0.01em] text-[#0f3c74] group-hover:text-blue-700 md:text-[18px];
   }
 
   .game-desc,
   .loading {
-    @apply text-[12px] text-slate-500 truncate animate-none;
+    @apply animate-none text-[12px] text-slate-500 line-clamp-2 md:text-[13px] md:line-clamp-none;
   }
 
   .game-item:hover .game-desc {
@@ -110,19 +178,40 @@
     @apply mt-2 flex flex-wrap gap-2;
   }
 
+  .game-save-meta {
+    @apply mt-3 text-[11px] text-sky-800;
+  }
+
+  .game-save-meta.is-empty {
+    @apply text-slate-400;
+  }
+
+  .game-card-actions {
+    @apply mt-3 flex gap-2;
+  }
+
+  .game-mini-hint {
+    @apply inline-flex items-center border border-gray-300 bg-white px-2 py-0.5 text-[11px] text-slate-500 rounded-[2px];
+  }
+
+  .game-mini-action {
+    @apply flex-1 cursor-pointer items-center justify-center border border-gray-400 bg-gradient-to-b from-[#f9f9f9] to-[#e0e0e0] px-3 py-1 text-[11px] text-slate-800 rounded-[2px] shadow-[inset_0_1px_0_#fff] hover:border-[#3c7fb1] hover:from-[#eaf6fd] hover:to-[#d7f0fe] active:from-[#cce8ff] active:to-[#b3d9ff];
+    display: inline-flex;
+  }
+
   .status-bar {
-    @apply flex items-center justify-between border-t border-gray-300 bg-gradient-to-b from-[#f0f0f0] to-[#e4e4e4] px-3 py-1.5 text-xs text-slate-600 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] rounded-b-md;
+    @apply flex items-center justify-between border border-[#828790] border-t-0 bg-gradient-to-b from-[#f0f0f0] to-[#e4e4e4] px-2 py-0.5 text-[12px] text-slate-600 rounded-b-[2px] md:px-3 md:py-1;
   }
 
   .system-modal-btn,
   .tool-link-btn,
   .graph-button,
   .back-btn {
-    @apply inline-flex cursor-pointer items-center justify-center rounded-[3px] border border-gray-400 bg-gradient-to-b from-[#f9f9f9] to-[#e0e0e0] px-4 py-1.5 text-xs text-slate-800 shadow-[0_1px_2px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.8)] hover:border-sky-400 hover:from-[#eaf6fd] hover:to-[#d7f0fe] hover:shadow-[0_1px_2px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.9)] active:from-[#cce8ff] active:to-[#b3d9ff] active:shadow-[inset_0_1px_3px_rgba(0,0,0,0.2)] focus:outline-hidden focus:ring-1 focus:ring-sky-400 transition-all duration-100;
+    @apply inline-flex cursor-pointer items-center justify-center rounded-[3px] border border-[#707070] bg-gradient-to-b from-[#f2f2f2] to-[#ebebeb] px-4 py-1.5 text-[12px] text-slate-800 shadow-[inset_0_1px_1px_rgba(255,255,255,1),0_1px_2px_rgba(0,0,0,0.05)] hover:border-[#3c7fb1] hover:from-[#eaf6fd] hover:to-[#d7f0fe] hover:shadow-[inset_0_1px_1px_#fff,0_1px_2px_rgba(0,0,0,0.1)] active:from-[#cce8ff] active:to-[#b3d9ff] active:scale-95 focus:outline-hidden focus:ring-1 focus:ring-sky-400 transition-all duration-150;
   }
 
   .back-btn {
-    @apply fixed right-4 top-4 z-[100] hidden px-3 py-1.5 shadow-[0_4px_10px_rgba(0,0,0,0.2)];
+    @apply fixed right-3 top-3 z-[100] hidden px-3 py-1.5 shadow-[0_4px_10px_rgba(0,0,0,0.3)] md:right-6 md:top-5;
   }
 
   .loading {
@@ -139,11 +228,11 @@
   }
 
   .system-modal-overlay {
-    @apply absolute inset-0 bg-black/40 backdrop-blur-[2px];
+    @apply absolute inset-0 bg-black/30;
   }
 
   .system-modal-window {
-    @apply relative z-10 m-0 flex max-h-[90vh] w-full max-w-[500px] flex-col rounded-xl border border-white/50 bg-gradient-to-b from-white/40 to-black/10 shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_1px_1px_rgba(255,255,255,0.8)] backdrop-blur-[15px] p-[6px];
+    @apply relative z-10 m-0 flex max-h-[90vh] w-full max-w-[500px] flex-col rounded-[8px] border border-black/40 bg-gradient-to-b from-white/30 to-[#92bcd3]/50 p-[8px] shadow-[0_20px_50px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.8),inset_1px_0_1px_rgba(255,255,255,0.5),inset_-1px_0_1px_rgba(255,255,255,0.5)] backdrop-blur-[8px];
   }
 
   .system-modal-window.wide {
@@ -155,7 +244,7 @@
   }
 
   .system-modal-window .content {
-    @apply min-h-[100px] flex-1 overflow-auto p-5 bg-white border border-gray-300;
+    @apply min-h-[100px] flex-1 overflow-auto p-3 bg-white border border-[#828790] relative z-10 md:p-5;
   }
 
   .system-modal-copy {
@@ -163,16 +252,16 @@
   }
 
   .system-modal-actions {
-    @apply mt-4 flex flex-wrap justify-end gap-2 bg-slate-100/40 p-3 -mx-5 -mb-5 border-t border-gray-300;
+    @apply mt-4 flex flex-wrap justify-end gap-2 bg-[#f0f0f0] p-3 -mx-5 -mb-5 border-t border-[#dfdfdf] relative z-20;
   }
 
   .system-modal-btn.primary {
-    @apply border-sky-600 bg-gradient-to-b from-[#7bc4ff] to-[#3a93ea] text-white font-medium shadow-[0_1px_2px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.5)] hover:from-[#8fd0ff] hover:to-[#4aa1e8] active:from-[#2e7acf] active:to-[#1a5b9c] active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)];
+    @apply border-[#3c7fb1] bg-gradient-to-b from-[#eaf6fd] to-[#b8e2f8] text-slate-900 shadow-[inset_0_1px_1px_#fff,0_1px_2px_rgba(0,0,0,0.05)] hover:from-[#d7f0fe] hover:to-[#99d1ff] active:from-[#b3d9ff] active:to-[#80c4ff];
   }
 
   .system-modal-input,
   .system-modal-textarea {
-    @apply w-full rounded-[3px] border border-gray-400 px-3 py-2 text-[13px] text-slate-800 bg-white shadow-[inset_0_1px_3px_rgba(0,0,0,0.1)] hover:border-sky-400 focus:border-sky-500 focus:outline-hidden focus:ring-1 focus:ring-sky-500 transition-colors duration-150;
+    @apply w-full rounded-[3px] border border-[#a0a0a0] px-3 py-2 text-[13px] text-slate-800 bg-white shadow-[inset_0_1px_3px_rgba(0,0,0,0.1)] hover:border-sky-400 focus:border-sky-500 focus:outline-hidden focus:ring-1 focus:ring-sky-500 transition-colors duration-200;
   }
 
   .system-modal-textarea {
@@ -199,9 +288,9 @@
 
   /* Custom Scrollbar for Win7 Feel */
   ::-webkit-scrollbar {
-    @apply w-[14px] h-[14px] bg-[#f0f0f0] border-l border-gray-300;
+    @apply w-[16px] h-[16px] bg-[#f0f0f0] border-l border-[#dfdfdf];
   }
   ::-webkit-scrollbar-thumb {
-    @apply bg-gradient-to-r from-[#e8e8e8] to-[#cecece] rounded-full border-[3px] border-solid border-[#f0f0f0] hover:from-[#dbeaf9] hover:to-[#b6d6f2] hover:border-[#e3f0fa];
+    @apply bg-gradient-to-r from-[#e8e8e8] to-[#cecece] border-[4px] border-solid border-[#f0f0f0] hover:from-[#dbeaf9] hover:to-[#b6d6f2] hover:border-[#e3f0fa];
   }
 }

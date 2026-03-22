@@ -3,10 +3,18 @@
     {
       "id": "reanimation",
       "file": "data/games/reanimation.json",
-      "name": "复活",
+      "name": "停尸房值夜",
       "icon": "⚰️",
-      "desc": "死而复生",
+      "desc": "在天亮前查清谁从 307 号冷柜里醒了过来。",
       "category": "恐怖悬疑"
+    },
+    {
+      "id": "paper-shrine",
+      "file": "data/games/paper-shrine.json",
+      "name": "纸楼守夜",
+      "icon": "🕯️",
+      "desc": "头七守夜时，查清祠堂、空棺和井底那个名字之间的旧债。",
+      "category": "中式恐怖"
     }
   ]
 }

@@ -42,6 +42,54 @@
     "initialState": {
       "type": "object"
     },
+    "phases": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/phase"
+      }
+    },
+    "systemRules": {
+      "type": "object",
+      "properties": {
+        "afterChoice": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/systemRule"
+          }
+        },
+        "beforeRender": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/systemRule"
+          }
+        },
+        "choiceRules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/choiceRule"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "collectibles": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/collectible"
+          }
+        },
+        "clues": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/collectible"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
     "scenes": {
       "type": "object",
       "minProperties": 1,
@@ -78,6 +126,9 @@
         },
         "disabledReason": {
           "type": "string"
+        },
+        "tags": {
+          "$ref": "#/$defs/stringArray"
         }
       },
       "allOf": [
@@ -165,8 +216,11 @@
         "reset": {
           "type": "boolean"
         },
-        "effects": {
-          "type": "object"
+        "actions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/action"
+          }
         },
         "conditions": {
           "$ref": "#/$defs/condition"
@@ -177,10 +231,176 @@
         "disabledReason": {
           "type": "string"
         },
+        "confirmText": {
+          "type": "string"
+        },
+        "irreversible": {
+          "type": "boolean"
+        },
+        "once": {
+          "type": "boolean"
+        },
+        "tags": {
+          "$ref": "#/$defs/stringArray"
+        }
+      }
+    },
+    "stringArray": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "phase": {
+      "type": "object",
+      "required": ["id"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "conditions": {
+          "$ref": "#/$defs/condition"
+        }
+      },
+      "additionalProperties": true
+    },
+    "systemRule": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "when": {
+          "$ref": "#/$defs/condition"
+        },
+        "actions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/action"
+          }
+        },
+        "goto": {
+          "type": "string",
+          "minLength": 1
+        },
         "once": {
           "type": "boolean"
         }
-      }
+      },
+      "additionalProperties": true
+    },
+    "collectible": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "object",
+          "required": ["id"],
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "name": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "icon": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": true
+        }
+      ]
+    },
+    "action": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "advanceTime",
+            "adjust",
+            "set",
+            "addTag",
+            "removeTag",
+            "gainItem",
+            "loseItem",
+            "gainClue",
+            "loseClue",
+            "pushUnique",
+            "removeValue"
+          ]
+        },
+        "key": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "number"
+        },
+        "value": {},
+        "tag": {
+          "type": "string"
+        },
+        "item": {
+          "type": "string"
+        },
+        "clue": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "choiceRule": {
+      "type": "object",
+      "required": ["action"],
+      "properties": {
+        "action": {
+          "type": "string",
+          "enum": ["disable", "hide"]
+        },
+        "reason": {
+          "type": "string"
+        },
+        "when": {
+          "$ref": "#/$defs/condition"
+        },
+        "match": {
+          "type": "object",
+          "properties": {
+            "tagsAny": {
+              "$ref": "#/$defs/stringArray"
+            },
+            "tagsAll": {
+              "$ref": "#/$defs/stringArray"
+            },
+            "sceneTagsAny": {
+              "$ref": "#/$defs/stringArray"
+            },
+            "sceneTagsAll": {
+              "$ref": "#/$defs/stringArray"
+            },
+            "next": {
+              "type": "string",
+              "minLength": 1
+            },
+            "sceneId": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
     },
     "conditionRule": {
       "type": "object",

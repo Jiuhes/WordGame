@@ -9,6 +9,50 @@ export function createLocalPlayController({
   normalizeGameData,
   makeLocalGameMeta,
 }) {
+  function explainImportError(error) {
+    if (error instanceof SyntaxError) {
+      return "JSON 格式不合法，通常是缺了逗号、引号或花括号。";
+    }
+    if (/missing entry scene/i.test(error.message)) {
+      return "剧本缺少入口场景，检查 entryScene 是否存在于 scenes 里。";
+    }
+    if (/missing a scenes object/i.test(error.message)) {
+      return "剧本没有 scenes 对象，程序无法开始运行。";
+    }
+    if (/schema/i.test(error.message)) {
+      return "剧本结构不符合当前格式要求。";
+    }
+    return error.message || "导入内容无法被当前程序识别。";
+  }
+
+  function askRemoteJsonUrl() {
+    return modal.openModal({
+      title: "从链接导入 JSON",
+      menu: "链接导入",
+      status: "请输入可直接访问的 JSON 地址",
+      hint: "链接地址",
+      render(container, done) {
+        const input = document.createElement("input");
+        input.className = "system-modal-input";
+        input.type = "text";
+        input.value = "";
+        input.placeholder = "https://example.com/game.json";
+        container.appendChild(input);
+
+        const actions = document.createElement("div");
+        actions.className = "system-modal-actions";
+        const cancelBtn = modal.createButton("取消");
+        cancelBtn.addEventListener("click", () => done(null));
+        actions.appendChild(cancelBtn);
+
+        const confirmBtn = modal.createButton("导入", { primary: true });
+        confirmBtn.addEventListener("click", () => done(input.value.trim()));
+        actions.appendChild(confirmBtn);
+        container.appendChild(actions);
+      },
+    });
+  }
+
   function askUploadOption() {
     return modal.openModal({
       title: "服务端同步上传",
@@ -126,9 +170,25 @@ export function createLocalPlayController({
 
   async function startLocalGameFromText(rawText, sourceName) {
     const rawGame = JSON.parse(rawText);
+    return startLocalGameFromObject(rawGame, sourceName);
+  }
+
+  async function startLocalGameFromObject(rawGame, sourceName) {
     const meta = makeLocalGameMeta({ name: sourceName }, rawGame);
     const game = normalizeGameData(rawGame, meta);
     runtime.resetIntoGame(game, game.entryScene);
+  }
+
+  async function loadRemoteGame(url) {
+    if (!url) {
+      return;
+    }
+    const response = await fetch(url, { method: "GET" });
+    if (!response.ok) {
+      throw new Error(`远程 JSON 加载失败：${response.status}`);
+    }
+    const rawGame = await response.json();
+    await startLocalGameFromObject(rawGame, url);
   }
 
   async function loadLocalGame(file) {
@@ -144,7 +204,7 @@ export function createLocalPlayController({
       runtime.showGame();
       els.gameTitle.textContent = "本地游戏";
       els.statusBar.innerHTML = "<span style='color:#ff6b6b'>加载失败</span>";
-      els.gameContent.innerHTML = `<div class='text danger'>本地 JSON 加载失败：${escapeHtml(error.message)}</div>`;
+      els.gameContent.innerHTML = `<div class='text danger'>本地 JSON 加载失败：${escapeHtml(explainImportError(error))}</div>`;
     } finally {
       els.localGameInput.value = "";
     }
@@ -163,8 +223,17 @@ export function createLocalPlayController({
     await startLocalGameFromText(rawText, "粘贴获得的测试剧本.json");
   }
 
+  async function handleRemoteJson() {
+    const url = await askRemoteJsonUrl();
+    if (!url) {
+      return;
+    }
+    await loadRemoteGame(url);
+  }
+
   return {
     loadLocalGame,
     handlePastedJson,
+    handleRemoteJson,
   };
 }

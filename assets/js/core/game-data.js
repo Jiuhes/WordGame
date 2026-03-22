@@ -1,5 +1,61 @@
 import { DEFAULT_ENTRY_SCENE } from "./constants.js";
-import { clone, clipText, slugify } from "./utils.js";
+import { clone, slugify } from "./utils.js";
+
+function normalizeCollectibleEntry(entry) {
+  if (!entry) {
+    return null;
+  }
+  if (typeof entry === "string") {
+    const id = entry.trim();
+    return id ? { id, name: id, description: "", icon: "" } : null;
+  }
+  if (typeof entry !== "object") {
+    return null;
+  }
+  const id = typeof entry.id === "string" ? entry.id.trim() : "";
+  if (!id) {
+    return null;
+  }
+  return {
+    id,
+    name:
+      typeof entry.name === "string" && entry.name.trim()
+        ? entry.name.trim()
+        : id,
+    description:
+      typeof entry.description === "string" ? entry.description.trim() : "",
+    icon: typeof entry.icon === "string" ? entry.icon.trim() : "",
+  };
+}
+
+function normalizeCollectibleGroup(entries) {
+  if (!Array.isArray(entries)) {
+    return [];
+  }
+  const seen = new Set();
+  return entries
+    .map((entry) => normalizeCollectibleEntry(entry))
+    .filter((entry) => {
+      if (!entry || seen.has(entry.id)) {
+        return false;
+      }
+      seen.add(entry.id);
+      return true;
+    });
+}
+
+function buildCollectiblesIndex(collectibles) {
+  const index = {
+    items: Object.create(null),
+    clues: Object.create(null),
+  };
+  for (const type of ["items", "clues"]) {
+    for (const entry of collectibles[type]) {
+      index[type][entry.id] = entry;
+    }
+  }
+  return index;
+}
 
 export function normalizeGameMeta(entry, index) {
   if (!entry || typeof entry !== "object") {
@@ -57,6 +113,13 @@ export function normalizeGameData(raw, meta) {
   if (!raw.scenes[entryScene]) {
     throw new Error(`${meta.file} is missing entry scene ${entryScene}`);
   }
+  const collectibles =
+    raw.collectibles && typeof raw.collectibles === "object"
+      ? {
+          items: normalizeCollectibleGroup(raw.collectibles.items),
+          clues: normalizeCollectibleGroup(raw.collectibles.clues),
+        }
+      : { items: [], clues: [] };
   return {
     ...raw,
     id: meta.id,
@@ -67,6 +130,13 @@ export function normalizeGameData(raw, meta) {
         : meta.name,
     entryScene,
     status: Array.isArray(raw.status) ? raw.status : [],
+    phases: Array.isArray(raw.phases) ? raw.phases : [],
+    systemRules:
+      raw.systemRules && typeof raw.systemRules === "object"
+        ? raw.systemRules
+        : {},
+    collectibles,
+    collectiblesIndex: buildCollectiblesIndex(collectibles),
     initialState:
       raw.initialState && typeof raw.initialState === "object"
         ? raw.initialState
@@ -88,20 +158,26 @@ export function makeLocalGameMeta(file, rawGame) {
 
 export function normalizeRuntimeState(game) {
   const runtime = clone(game.initialState || {});
+  if (!Array.isArray(runtime.tags)) {
+    runtime.tags = [];
+  }
+  if (!Array.isArray(runtime.items)) {
+    runtime.items = [];
+  }
+  if (!Array.isArray(runtime.clues)) {
+    runtime.clues = [];
+  }
+  if (!Array.isArray(runtime.__firedSystemRules)) {
+    runtime.__firedSystemRules = [];
+  }
+  if (runtime.phase == null) {
+    runtime.phase =
+      typeof game.phases?.[0]?.id === "string" ? game.phases[0].id : "default";
+  }
   for (const item of game.status || []) {
     if (runtime[item.key] == null) {
       runtime[item.key] = item.value;
     }
   }
   return runtime;
-}
-
-export function getScenePreview(scene) {
-  const blocks = Array.isArray(scene.contentBlocks) ? scene.contentBlocks : [];
-  const block = blocks.find(
-    (item) => typeof item?.text === "string" && item.text.trim(),
-  );
-  return (
-    clipText(block?.text || scene.description || "", 120) || "暂无正文预览。"
-  );
 }

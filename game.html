@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="assets/css/tailwind.css?v=2" />
   </head>
   <body class="lobby-page">
-    <div id="debug"></div>
     <button class="back-btn" id="backBtn" type="button">← 返回大厅</button>
     <input
       id="localGameInput"
@@ -48,8 +47,7 @@
     <!-- 大厅 -->
     <div class="window" id="lobby">
       <div class="title-bar">
-        <span class="title-text">游戏大厅</span
-        ><span class="close-btn">X</span>
+        <span class="title-text">游戏大厅</span><span class="close-btn">X</span>
       </div>
       <div class="menu-bar">
         <span class="menu-item has-menu" id="fileMenuTrigger" tabindex="0">
@@ -65,26 +63,19 @@
             <button
               type="button"
               class="menu-dropdown-item"
+              id="openRemoteJsonAction"
+            >
+              从链接导入
+            </button>
+            <button
+              type="button"
+              class="menu-dropdown-item"
               id="pasteLocalJsonAction"
             >
               粘贴 JSON
             </button>
           </div>
         </span>
-        <button
-          type="button"
-          class="menu-item menu-link-button"
-          id="openGraphViewAction"
-        >
-          图谱
-        </button>
-        <button
-          type="button"
-          class="menu-item menu-link-button"
-          id="openGuideViewAction"
-        >
-          指南
-        </button>
         <button
           type="button"
           class="menu-item menu-link-button"
@@ -98,13 +89,6 @@
           id="openSettingsViewAction"
         >
           设置
-        </button>
-        <button
-          type="button"
-          class="menu-item menu-link-button"
-          id="openAuthorViewAction"
-        >
-          创作者
         </button>
       </div>
       <div class="content">
@@ -132,9 +116,9 @@
         <button
           type="button"
           class="menu-item menu-link-button"
-          id="openSaveViewActionGame"
+          id="restartGameAction"
         >
-          存档
+          重开
         </button>
         <button
           type="button"
@@ -150,31 +134,15 @@
         >
           设置
         </button>
-        <button
-          type="button"
-          class="menu-item menu-link-button"
-          id="openAuthorViewActionGame"
-        >
-          创作者
-        </button>
       </div>
       <div class="content">
         <div class="status-bar game-status-bar" id="statusBar"></div>
+        <div class="feedback-layer" id="feedbackLayer" aria-live="polite"></div>
         <div id="gameContent"><div class="loading">正在加载...</div></div>
+      </div>
+      <div id="collectionBar" class="collection-bar"></div>
+      <div class="status-bar"><span>实时存档</span><span>运行中</span></div>
     </div>
-    <div class="status-bar"><span>实时存档</span><span>运行中</span></div>
-  </div>
-
-    <script>
-      // 调试输出 - 默认隐藏
-      function log(msg) {
-        console.log(msg);
-      }
-      log("页面加载开始");
-    </script>
     <script type="module" src="assets/js/game.js?v=21"></script>
-    <script>
-      log("JS加载完成");
-    </script>
   </body>
 </html>

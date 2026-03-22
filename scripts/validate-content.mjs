@@ -76,7 +76,211 @@ function collectDeclaredStateKeys(game) {
   return keys;
 }
 
-function validateCondition(condition, label, declaredStateKeys, problems) {
+function normalizeCollectibleEntry(entry) {
+  if (typeof entry === "string") {
+    const id = entry.trim();
+    return id ? { id, name: id } : null;
+  }
+  if (!entry || typeof entry !== "object") {
+    return null;
+  }
+  const id = typeof entry.id === "string" ? entry.id.trim() : "";
+  if (!id) {
+    return null;
+  }
+  return {
+    id,
+    name:
+      typeof entry.name === "string" && entry.name.trim()
+        ? entry.name.trim()
+        : id,
+  };
+}
+
+function collectDeclaredCollectibles(game) {
+  const result = {
+    items: new Set(),
+    clues: new Set(),
+  };
+  const collectibles =
+    game.collectibles && typeof game.collectibles === "object"
+      ? game.collectibles
+      : {};
+  for (const kind of ["items", "clues"]) {
+    for (const entry of collectibles[kind] || []) {
+      const normalized = normalizeCollectibleEntry(entry);
+      if (normalized) {
+        result[kind].add(normalized.id);
+      }
+    }
+  }
+  return result;
+}
+
+function validateCollectibleReference(
+  kind,
+  id,
+  label,
+  declaredCollectibles,
+  problems,
+) {
+  if (typeof id !== "string" || !id.trim()) {
+    problems.push(`${label} is missing ${kind.slice(0, -1)} id`);
+    return;
+  }
+  if (
+    declaredCollectibles[kind].size > 0 &&
+    !declaredCollectibles[kind].has(id.trim())
+  ) {
+    problems.push(
+      `${label} references undeclared ${kind.slice(0, -1)} "${id}"`,
+    );
+  }
+}
+
+function validateActions(
+  actions,
+  label,
+  declaredStateKeys,
+  declaredCollectibles,
+  problems,
+) {
+  if (!Array.isArray(actions)) {
+    return;
+  }
+  actions.forEach((action, index) => {
+    if (!action || typeof action !== "object") {
+      problems.push(`${label}[${index}] is not a valid action object`);
+      return;
+    }
+    const actionLabel = `${label}[${index}]`;
+    switch (action.type) {
+      case "adjust":
+      case "set":
+      case "pushUnique":
+      case "removeValue":
+        if (
+          typeof action.key !== "string" ||
+          !action.key.trim() ||
+          !declaredStateKeys.has(action.key)
+        ) {
+          problems.push(
+            `${actionLabel} references undeclared state key "${action.key}"`,
+          );
+        }
+        break;
+      case "gainItem":
+      case "loseItem":
+        validateCollectibleReference(
+          "items",
+          action.item,
+          `${actionLabel}.item`,
+          declaredCollectibles,
+          problems,
+        );
+        break;
+      case "gainClue":
+      case "loseClue":
+        validateCollectibleReference(
+          "clues",
+          action.clue,
+          `${actionLabel}.clue`,
+          declaredCollectibles,
+          problems,
+        );
+        break;
+      default:
+        break;
+    }
+  });
+}
+
+function collectPotentialReachableScenes(game) {
+  const visited = new Set();
+  const queue = [game.entryScene || "intro"];
+  while (queue.length) {
+    const sceneId = queue.shift();
+    if (!sceneId || visited.has(sceneId) || !game.scenes?.[sceneId]) {
+      continue;
+    }
+    visited.add(sceneId);
+    const scene = game.scenes[sceneId];
+    for (const choice of scene.choices || []) {
+      if (
+        choice?.next &&
+        choice.next !== "__lobby__" &&
+        !visited.has(choice.next)
+      ) {
+        queue.push(choice.next);
+      }
+    }
+    for (const ruleGroup of ["beforeRender", "afterChoice"]) {
+      for (const rule of game.systemRules?.[ruleGroup] || []) {
+        if (
+          rule?.goto &&
+          rule.goto !== "__lobby__" &&
+          !visited.has(rule.goto)
+        ) {
+          queue.push(rule.goto);
+        }
+      }
+    }
+  }
+  return visited;
+}
+
+function validateRuleList(
+  rules,
+  label,
+  declaredStateKeys,
+  declaredCollectibles,
+  problems,
+  scenes,
+) {
+  if (!Array.isArray(rules)) {
+    return;
+  }
+  rules.forEach((rule, index) => {
+    if (rule?.when) {
+      validateCondition(
+        rule.when,
+        `${label}[${index}].when`,
+        declaredStateKeys,
+        declaredCollectibles,
+        problems,
+      );
+    }
+    validateActions(
+      rule?.actions,
+      `${label}[${index}].actions`,
+      declaredStateKeys,
+      declaredCollectibles,
+      problems,
+    );
+    if (rule?.effects != null) {
+      problems.push(
+        `${label}[${index}] still uses legacy effects; migrate to actions`,
+      );
+    }
+    if (
+      typeof rule?.goto === "string" &&
+      rule.goto !== "__lobby__" &&
+      !scenes[rule.goto]
+    ) {
+      problems.push(
+        `${label}[${index}].goto points to missing scene "${rule.goto}"`,
+      );
+    }
+  });
+}
+
+function validateCondition(
+  condition,
+  label,
+  declaredStateKeys,
+  declaredCollectibles,
+  problems,
+) {
   if (!condition || typeof condition !== "object") {
     return;
   }
@@ -87,6 +291,7 @@ function validateCondition(condition, label, declaredStateKeys, problems) {
         item,
         `${label}.all[${index}]`,
         declaredStateKeys,
+        declaredCollectibles,
         problems,
       );
     });
@@ -99,6 +304,7 @@ function validateCondition(condition, label, declaredStateKeys, problems) {
         item,
         `${label}.any[${index}]`,
         declaredStateKeys,
+        declaredCollectibles,
         problems,
       );
     });
@@ -110,6 +316,7 @@ function validateCondition(condition, label, declaredStateKeys, problems) {
       condition.not,
       `${label}.not`,
       declaredStateKeys,
+      declaredCollectibles,
       problems,
     );
     return;
@@ -121,7 +328,36 @@ function validateCondition(condition, label, declaredStateKeys, problems) {
     return;
   }
   if (!declaredStateKeys.has(key)) {
+    if (key === "$scene") {
+      return;
+    }
     problems.push(`${label} references undeclared state key "${key}"`);
+  }
+  if (
+    key === "items" &&
+    ["includes", "notIncludes"].includes(condition.op) &&
+    typeof condition.value === "string"
+  ) {
+    validateCollectibleReference(
+      "items",
+      condition.value,
+      `${label}.value`,
+      declaredCollectibles,
+      problems,
+    );
+  }
+  if (
+    key === "clues" &&
+    ["includes", "notIncludes"].includes(condition.op) &&
+    typeof condition.value === "string"
+  ) {
+    validateCollectibleReference(
+      "clues",
+      condition.value,
+      `${label}.value`,
+      declaredCollectibles,
+      problems,
+    );
   }
 }
 
@@ -172,6 +408,55 @@ function main() {
       continue;
     }
     const declaredStateKeys = collectDeclaredStateKeys(game);
+    const declaredCollectibles = collectDeclaredCollectibles(game);
+    for (const [phaseIndex, phase] of (game.phases || []).entries()) {
+      if (phase?.conditions) {
+        validateCondition(
+          phase.conditions,
+          `${gameFile} phases[${phaseIndex}].conditions`,
+          declaredStateKeys,
+          declaredCollectibles,
+          problems,
+        );
+      }
+    }
+
+    validateRuleList(
+      game.systemRules?.afterChoice,
+      `${gameFile} systemRules.afterChoice`,
+      declaredStateKeys,
+      declaredCollectibles,
+      problems,
+      game.scenes,
+    );
+    validateRuleList(
+      game.systemRules?.beforeRender,
+      `${gameFile} systemRules.beforeRender`,
+      declaredStateKeys,
+      declaredCollectibles,
+      problems,
+      game.scenes,
+    );
+    validateRuleList(
+      game.systemRules?.choiceRules,
+      `${gameFile} systemRules.choiceRules`,
+      declaredStateKeys,
+      declaredCollectibles,
+      problems,
+      game.scenes,
+    );
+
+    for (const kind of ["items", "clues"]) {
+      for (const [index, entry] of (
+        game.collectibles?.[kind] || []
+      ).entries()) {
+        if (!normalizeCollectibleEntry(entry)) {
+          problems.push(
+            `${gameFile} collectibles.${kind}[${index}] is invalid`,
+          );
+        }
+      }
+    }
 
     const entryScene = game.entryScene || "intro";
     if (!game.scenes[entryScene]) {
@@ -184,6 +469,7 @@ function main() {
           scene.conditions,
           `${gameFile} scene "${sceneId}".conditions`,
           declaredStateKeys,
+          declaredCollectibles,
           problems,
         );
       }
@@ -204,6 +490,7 @@ function main() {
               choice.conditions,
               `${gameFile} scene "${sceneId}" choices[${choiceIndex}].conditions`,
               declaredStateKeys,
+              declaredCollectibles,
               problems,
             );
           }
@@ -212,7 +499,25 @@ function main() {
               choice.visibility,
               `${gameFile} scene "${sceneId}" choices[${choiceIndex}].visibility`,
               declaredStateKeys,
+              declaredCollectibles,
               problems,
+            );
+          }
+          validateActions(
+            choice.actions,
+            `${gameFile} scene "${sceneId}" choices[${choiceIndex}].actions`,
+            declaredStateKeys,
+            declaredCollectibles,
+            problems,
+          );
+          if (choice.effects != null) {
+            problems.push(
+              `${gameFile} scene "${sceneId}" choices[${choiceIndex}] still uses legacy effects; migrate to actions`,
+            );
+          }
+          if (choice.timeCost != null) {
+            problems.push(
+              `${gameFile} scene "${sceneId}" choices[${choiceIndex}] still uses legacy timeCost; use actions.advanceTime`,
             );
           }
         });
@@ -259,6 +564,15 @@ function main() {
             }
           }
         });
+      }
+    }
+
+    const reachableScenes = collectPotentialReachableScenes(game);
+    for (const sceneId of Object.keys(game.scenes || {})) {
+      if (!reachableScenes.has(sceneId)) {
+        problems.push(
+          `${gameFile} scene "${sceneId}" is not reachable from entry scene`,
+        );
       }
     }
   }

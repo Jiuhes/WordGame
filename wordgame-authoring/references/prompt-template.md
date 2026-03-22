@@ -10,21 +10,26 @@
 不要输出解释、说明、注释或额外文本。
 
 要求：
-- 顶层包含 `title`、`subtitle`、`entryScene`、`status`、`initialState`、`scenes`。
+- 顶层至少包含 `title`、`entryScene`、`scenes`。
+- 推荐同时包含 `subtitle`、`status`、`initialState`。
 - 每个场景统一使用 `contentBlocks`，不要使用旧字段 `content`。
 - 每个 `contentBlock` 必须包含 `type`，并且包含 `text` 或 `html` 之一。
-- 可以使用这些可选字段：`speaker`、`eyebrow`、`emphasis`、`aside`。
+- 可选字段只在有必要时使用：`speaker`、`eyebrow`、`emphasis`、`aside`。
 - 每个 `choice` 必须有 `text`，通常还应有 `next`。
-- 可以使用 `effects`、`visibility`、`conditions`、`disabledReason`、`once`、`reset`。
+- 选项优先使用 `actions`，不要使用旧字段 `effects` 或 `timeCost`。
+- 可以使用 `conditions`、`visibility`、`disabledReason`、`confirmText`、`irreversible`、`once`、`reset`、`tags`。
 - 除 `__lobby__` 外，所有 `next` 都必须在 `scenes` 中真实存在。
+- 如果使用 `goto` 规则，目标场景也必须真实存在或为 `__lobby__`。
 - 只能修改 `initialState` 或 `status` 中已经声明过的状态键。
-- 不要留下 TODO、占位符、空场景或断裂分支。
+- 如果使用 `gainItem`、`loseItem`、`gainClue`、`loseClue`，优先声明 `collectibles.items` 和 `collectibles.clues`。
+- 不要留下 TODO、占位符、空场景、断裂分支或不可达主线。
 
 建议：
 - 默认使用 `intro` 作为入口场景。
 - 写成一个小型可玩故事，包含 12 到 30 个场景。
 - 设计 2 到 4 个有区别的结局。
-- 用状态变化和条件分支制造明显的决策压力。
-- 选项要有真实差异，不要只写表面不同的按钮。
-- 仅在有助于阅读节奏时使用 `eyebrow` 和 `speaker`。
+- 用状态变化、收集物和条件分支制造明显的决策压力。
+- 需要统一控选项行为时，可使用 `systemRules.choiceRules`。
+- 仅在确实需要更复杂流程时，再引入 `phases`、`systemRules.beforeRender`、`systemRules.afterChoice`。
+- `initialState` 里建议显式写出 `tags`、`items`、`clues` 三个数组，即使运行时会自动补齐。
 ```

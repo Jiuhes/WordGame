@@ -1,4 +1,5 @@
 node_modules/
+output/
 temp_labels.json
 
 # OS
@@ -11,3 +12,4 @@ Desktop.ini
 .idea/
 *.swp
 *.swo
+scripts/run-tts-batch-minimax.local.ps1

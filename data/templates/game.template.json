@@ -10,7 +10,7 @@
       "max": 100
     },
     {
-      "key": "clues",
+      "key": "clueCount",
       "label": "线索",
       "value": 0,
       "max": 10
@@ -18,7 +18,77 @@
   ],
   "initialState": {
     "sanity": 100,
-    "clues": 0
+    "clueCount": 0,
+    "items": [],
+    "clues": [],
+    "phase": "early",
+    "tags": []
+  },
+  "phases": [
+    {
+      "id": "early",
+      "conditions": {
+        "key": "clueCount",
+        "op": "lt",
+        "value": 3
+      }
+    },
+    {
+      "id": "late",
+      "conditions": {
+        "key": "clueCount",
+        "op": "gte",
+        "value": 3
+      }
+    }
+  ],
+  "collectibles": {
+    "items": [
+      {
+        "id": "keycard",
+        "name": "门禁卡",
+        "description": "可以打开员工区域的基础门禁。"
+      }
+    ],
+    "clues": [
+      {
+        "id": "smell_note",
+        "name": "消毒水气味",
+        "description": "空气中的味道像消毒水混着铁锈。"
+      }
+    ]
+  },
+  "systemRules": {
+    "afterChoice": [
+      {
+        "id": "low-sanity",
+        "when": {
+          "key": "sanity",
+          "op": "lte",
+          "value": 20
+        },
+        "actions": [
+          {
+            "type": "addTag",
+            "tag": "unstable"
+          }
+        ]
+      }
+    ],
+    "choiceRules": [
+      {
+        "action": "disable",
+        "when": {
+          "key": "tags",
+          "op": "includes",
+          "value": "unstable"
+        },
+        "match": {
+          "tagsAny": ["precise"]
+        },
+        "reason": "你现在已经不够冷静，做不出这种精细判断。"
+      }
+    ]
   },
   "scenes": {
     "intro": {
@@ -37,9 +107,31 @@
         {
           "text": "继续前进",
           "next": "next_scene",
-          "effects": {
-            "sanity": -5
-          }
+          "tags": ["precise"],
+          "actions": [
+            {
+              "type": "advanceTime",
+              "amount": 1
+            },
+            {
+              "type": "adjust",
+              "key": "sanity",
+              "amount": -5
+            },
+            {
+              "type": "adjust",
+              "key": "clueCount",
+              "amount": 1
+            },
+            {
+              "type": "gainItem",
+              "item": "keycard"
+            },
+            {
+              "type": "gainClue",
+              "clue": "smell_note"
+            }
+          ]
         }
       ]
     },

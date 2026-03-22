@@ -34,9 +34,13 @@ export function open(app) {
           ? storage.getEndingStats(gameId)
           : { discoveredEndings: [], totalRuns: 0 };
         const discovered = stats.discoveredEndings || [];
+        const undiscovered = Math.max(0, totalEndings - discovered.length);
         const percent = totalEndings
           ? Math.round((discovered.length / totalEndings) * 100)
           : 0;
+        const lastEnding = discovered
+          .slice()
+          .sort((a, b) => Number(b.at || 0) - Number(a.at || 0))[0];
 
         container.innerHTML = `
           <div class="tool-panel tool-panel-stats">
@@ -58,9 +62,17 @@ export function open(app) {
             <div class="graph-summary">
               <div class="graph-pill">已解锁结局: ${discovered.length}</div>
               <div class="graph-pill">总结局数: ${totalEndings}</div>
+              <div class="graph-pill">未解锁: ${undiscovered}</div>
               <div class="graph-pill">收集度: ${percent}%</div>
               <div class="graph-pill">累计游玩: ${stats.totalRuns || 0}</div>
             </div>
+            <div class="author-note">${
+              lastEnding
+                ? `最近达成: ${escapeHtml(
+                    lastEnding.title || lastEnding.sceneId,
+                  )} · ${escapeHtml(new Date(lastEnding.at).toLocaleString())}`
+                : "还没有记录到任何结局。"
+            }</div>
             <div class="author-table-wrap">
               <table class="author-table">
                 <thead><tr><th>结局节点</th><th>名称</th><th>达成时间</th></tr></thead>

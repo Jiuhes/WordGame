@@ -1,0 +1,1155 @@
+{
+  "title": "纸楼守夜",
+  "subtitle": "头七这晚，祠堂里不能让第二炷香灭掉。",
+  "entryScene": "intro",
+  "status": [
+    {
+      "key": "sanity",
+      "label": "心神",
+      "value": 6,
+      "max": 6
+    },
+    {
+      "key": "incense",
+      "label": "香火",
+      "value": 3,
+      "max": 3
+    },
+    {
+      "key": "evidence",
+      "label": "证据",
+      "value": 0,
+      "max": 5
+    },
+    {
+      "key": "resolve",
+      "label": "定力",
+      "value": 2,
+      "max": 5
+    }
+  ],
+  "initialState": {
+    "sanity": 6,
+    "incense": 3,
+    "evidence": 0,
+    "resolve": 2,
+    "time": 0,
+    "phase": "early",
+    "items": [],
+    "clues": [],
+    "tags": []
+  },
+  "phases": [
+    {
+      "id": "final",
+      "conditions": {
+        "key": "time",
+        "op": "gte",
+        "value": 6
+      }
+    },
+    {
+      "id": "late",
+      "conditions": {
+        "key": "time",
+        "op": "gte",
+        "value": 4
+      }
+    },
+    {
+      "id": "mid",
+      "conditions": {
+        "key": "time",
+        "op": "gte",
+        "value": 2
+      }
+    },
+    {
+      "id": "early",
+      "conditions": {
+        "key": "time",
+        "op": "gte",
+        "value": 0
+      }
+    }
+  ],
+  "systemRules": {
+    "afterChoice": [
+      {
+        "id": "unstable-on",
+        "when": {
+          "key": "sanity",
+          "op": "lte",
+          "value": 2
+        },
+        "actions": [
+          {
+            "type": "addTag",
+            "tag": "unstable"
+          }
+        ]
+      },
+      {
+        "id": "unstable-off",
+        "when": {
+          "key": "sanity",
+          "op": "gt",
+          "value": 2
+        },
+        "actions": [
+          {
+            "type": "removeTag",
+            "tag": "unstable"
+          }
+        ]
+      },
+      {
+        "id": "no-incense-on",
+        "when": {
+          "key": "incense",
+          "op": "lte",
+          "value": 0
+        },
+        "actions": [
+          {
+            "type": "addTag",
+            "tag": "no_incense"
+          }
+        ]
+      },
+      {
+        "id": "no-incense-off",
+        "when": {
+          "key": "incense",
+          "op": "gt",
+          "value": 0
+        },
+        "actions": [
+          {
+            "type": "removeTag",
+            "tag": "no_incense"
+          }
+        ]
+      }
+    ],
+    "choiceRules": [
+      {
+        "action": "disable",
+        "when": {
+          "key": "tags",
+          "op": "includes",
+          "value": "unstable"
+        },
+        "match": {
+          "tagsAny": ["precise"]
+        },
+        "reason": "你现在心神发散，做不出这种需要辨认细节的判断。"
+      },
+      {
+        "action": "disable",
+        "when": {
+          "key": "tags",
+          "op": "includes",
+          "value": "no_incense"
+        },
+        "match": {
+          "tagsAny": ["requires_incense"]
+        },
+        "reason": "香火已经断了，祠堂里的安魂做法现在起不了作用。"
+      },
+      {
+        "action": "disable",
+        "when": {
+          "key": "phase",
+          "op": "eq",
+          "value": "final"
+        },
+        "match": {
+          "tagsAny": ["early_only"]
+        },
+        "reason": "你已经拖到鸡将叫了，再想补做这种前置动作已经来不及。"
+      }
+    ]
+  },
+  "collectibles": {
+    "items": [
+      {
+        "id": "祠堂钥匙",
+        "name": "祠堂钥匙",
+        "description": "账房抽屉里留下的一把旧黄铜钥匙。"
+      },
+      {
+        "id": "铜铃",
+        "name": "铜铃",
+        "description": "曾经系在井绳上的安魂铜铃。"
+      },
+      {
+        "id": "红绳",
+        "name": "红绳",
+        "description": "阁楼木箱里留下的旧红绳，上面还缠着香灰。"
+      }
+    ],
+    "clues": [
+      {
+        "id": "血账页",
+        "name": "血账页",
+        "description": "被撕下又塞回抽屉夹层的一页旧账。"
+      },
+      {
+        "id": "井底名字",
+        "name": "井底名字",
+        "description": "井栏内壁刻着一个被反复描深的名字。"
+      },
+      {
+        "id": "空棺划痕",
+        "name": "空棺划痕",
+        "description": "棺盖内侧抓出来的四道新痕。"
+      },
+      {
+        "id": "婆婆遗嘱",
+        "name": "婆婆遗嘱",
+        "description": "写明如何处理祠堂旧债的一页遗嘱。"
+      },
+      {
+        "id": "纸人底稿",
+        "name": "纸人底稿",
+        "description": "西厢房阁楼里压着的一张纸扎底稿。"
+      }
+    ]
+  },
+  "scenes": {
+    "intro": {
+      "title": "头七回村",
+      "contentBlocks": [
+        {
+          "type": "narrator",
+          "text": "你赶在子时前回到老宅祠堂，为刚下葬的婆婆守头七。院门刚关上，灵堂里的长明灯就猛地晃了一下，像是有人从棺后轻轻吹了口气。"
+        },
+        {
+          "type": "danger",
+          "text": "村里人送你进门前反复叮嘱: 今晚不能让第二炷香灭，也不能回答井边有人叫你的乳名。"
+        }
+      ],
+      "choices": [
+        {
+          "text": "先去灵堂，把香火续上",
+          "next": "mourning_hall",
+          "actions": [
+            {
+              "type": "advanceTime",
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "text": "先去账房，看婆婆生前到底留下了什么",
+          "next": "ledger_room",
+          "actions": [
+            {
+              "type": "advanceTime",
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "text": "先去井台附近确认动静从哪儿来的",
+          "next": "well_courtyard",
+          "actions": [
+            {
+              "type": "advanceTime",
+              "amount": 1
+            }
+          ]
+        }
+      ]
+    },
+    "mourning_hall": {
+      "title": "灵堂里的第二炷香",
+      "contentBlocks": [
+        {
+          "type": "narrator",
+          "text": "灵牌前的纸灰堆得很整齐，像有人刚替你收拾过。婆婆的棺木停在最里侧，棺钉已经封好，偏偏棺盖边缘仍留着一线比夜风更冷的湿气。"
+        },
+        {
+          "type": "clue",
+          "text": "你刚把新香插稳，香头忽然同时朝井台方向偏过去。"
+        }
+      ],
+      "choices": [
+        {
+          "text": "凑近棺盖，看看里面为什么会有潮气",
+          "next": "open_coffin",
+          "actions": [
+            {
+              "type": "advanceTime",
+              "amount": 1
+            },
+            {
+              "type": "adjust",
+              "key": "incense",
+              "amount": -1
+            }
+          ]
+        },
+        {
+          "text": "去偏院给大姑妈打电话，问她祠堂旧规",
+          "next": "aunt_call",
+          "actions": [
+            {
+              "type": "advanceTime",
+              "amount": 1
+            },
+            {
+              "type": "adjust",
+              "key": "resolve",
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "text": "跟着湿脚印往回廊深处走",
+          "next": "lantern_corridor",
+          "actions": [
+            {
+              "type": "advanceTime",
+              "amount": 1
+            },
+            {
+              "type": "adjust",
+              "key": "sanity",
+              "amount": -1
+            }
+          ]
+        }
+      ]
+    },
+    "ledger_room": {
+      "title": "账房夹层",
+      "contentBlocks": [
+        {
+          "type": "narrator",
+          "text": "账房里有股潮纸和旧墨的味道。算盘上还停着半粒没拨回去的珠子，像有人在很慌的时候被迫中途停手。"
+        },
+        {
+          "type": "secret",
+          "text": "你在抽屉夹层里摸到一把黄铜钥匙和一页被血渍粘住的旧账，账上记的不是香油钱，而是多年前某次“借命”的支出。"
+        }
+      ],
+      "choices": [
+        {
+          "text": "带走钥匙和账页，去西厢房找能对应上的东西",
+          "next": "west_room",
+          "tags": ["precise"],
+          "actions": [
+            {
+              "type": "advanceTime",
+              "amount": 1
+            },
+            {
+              "type": "gainItem",
+              "item": "祠堂钥匙"
+            },
+            {
+              "type": "gainClue",
+              "clue": "血账页"
+            },
+            {
+              "type": "adjust",
+              "key": "evidence",
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "text": "先打电话问大姑妈，账上的借命到底借给了谁",
+          "next": "aunt_call",
+          "actions": [
+            {
+              "type": "advanceTime",
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "text": "拿着账页回灵堂，对照牌位看看缺了谁",
+          "next": "mourning_hall",
+          "actions": [
+            {
+              "type": "advanceTime",
+              "amount": 1
+            }
+          ]
+        }
+      ]
+    },
+    "well_courtyard": {
+      "title": "井台回声",
+      "contentBlocks": [
+        {
+          "type": "narrator",
+          "text": "院里那口封了半辈子的老井今晚竟然揭着木盖，井绳湿得发亮，一路拖到青石地上。井沿内壁有人拿钉子刻了一个名字，反复描了很多遍，像怕死后没人认得。"
+        },
+        {
+          "type": "ghost",
+          "text": "你弯下腰时，井里正好传来一句轻得像水泡破开的乳名。"
+        }
+      ],
+      "choices": [
+        {
+          "text": "用竹竿把井绳上的东西勾上来",
+          "next": "lantern_corridor",
+          "actions": [
+            {
+              "type": "advanceTime",
+              "amount": 1
+            },
+            {
+              "type": "gainItem",
+              "item": "铜铃"
+            },
+            {
+              "type": "gainClue",
+              "clue": "井底名字"
+            },
+            {
+              "type": "adjust",
+              "key": "evidence",
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "text": "不听井里的声音，转去回廊追湿脚印",
+          "next": "lantern_corridor",
+          "actions": [
+            {
+              "type": "advanceTime",
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "text": "去偏院打电话，先问活人比问井下的东西靠谱",
+          "next": "aunt_call",
+          "actions": [
+            {
+              "type": "advanceTime",
+              "amount": 1
+            },
+            {
+              "type": "adjust",
+              "key": "resolve",
+              "amount": 1
+            }
+          ]
+        }
+      ]
+    },
+    "aunt_call": {
+      "title": "大姑妈只说半句",
+      "contentBlocks": [
+        {
+          "type": "dialogue",
+          "speaker": "大姑妈",
+          "text": "你婆婆不是怕自己走得不安稳，她是怕那个名字今晚回来认门。记着，第二炷香灭了就别再开棺，也别让井边的铃自己响。"
+        },
+        {
+          "type": "narrator",
+          "text": "她像是正开着车往村里赶，只来得及补一句: 西厢房阁楼里有她没敢烧掉的东西。"
+        }
+      ],
+      "choices": [
+        {
+          "text": "信她一次，去西厢房找阁楼入口",
+          "next": "west_room",
+          "actions": [
+            {
+              "type": "advanceTime",
+              "amount": 1
+            },
+            {
+              "type": "adjust",
+              "key": "resolve",
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "text": "她不让开棺，你偏要回灵堂亲眼确认",
+          "next": "open_coffin",
+          "actions": [
+            {
+              "type": "advanceTime",
+              "amount": 1
+            },
+            {
+              "type": "adjust",
+              "key": "sanity",
+              "amount": -1
+            }
+          ]
+        },
+        {
+          "text": "趁她还没断线，再问一次账上的借命旧案",
+          "next": "ledger_room",
+          "tags": ["early_only"],
+          "actions": [
+            {
+              "type": "advanceTime",
+              "amount": 1
+            }
+          ]
+        }
+      ]
+    },
+    "lantern_corridor": {
+      "title": "回廊风灯",
+      "contentBlocks": [
+        {
+          "type": "narrator",
+          "text": "回廊的白灯笼被风吹得一下高一下低，地面上的湿脚印到这里忽然变成了拖拽的痕迹，一直通往井台背后的暗角。"
+        },
+        {
+          "type": "danger",
+          "text": "墙上挂着的纸扎童子都面朝同一方向，像在替某个迟到的人让路。"
+        }
+      ],
+      "choices": [
+        {
+          "text": "顺着拖痕去井台背后看个明白",
+          "next": "spirit_trace",
+          "actions": [
+            {
+              "type": "advanceTime",
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "text": "先去西厢房，把阁楼里没烧掉的东西找出来",
+          "next": "west_room",
+          "actions": [
+            {
+              "type": "advanceTime",
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "text": "回灵堂再续一炷香，稳住再说",
+          "next": "mourning_hall",
+          "actions": [
+            {
+              "type": "advanceTime",
+              "amount": 1
+            },
+            {
+              "type": "adjust",
+              "key": "incense",
+              "amount": 1
+            }
+          ]
+        }
+      ]
+    },
+    "west_room": {
+      "title": "西厢房纸门",
+      "contentBlocks": [
+        {
+          "type": "narrator",
+          "text": "西厢房门板薄得像一张被浸过油的黄纸，门内堆满了没烧完的纸扎人和寿衣样本。阁楼口就在最里侧，偏偏上面垂下来一截刚被谁摸过的红线。"
+        },
+        {
+          "type": "item",
+          "text": "你隐约觉得，婆婆并不是在替自己准备后事，而是在给别人留退路。"
+        }
+      ],
+      "choices": [
+        {
+          "text": "用祠堂钥匙开门，上阁楼翻木箱",
+          "next": "hidden_mezzanine",
+          "conditions": {
+            "key": "items",
+            "op": "includes",
+            "value": "祠堂钥匙"
+          },
+          "disabledReason": "门锁还是老黄铜的，没有钥匙，你很难不惊动里面的东西。",
+          "actions": [
+            {
+              "type": "advanceTime",
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "text": "直接撞门进去，不管会不会惊动什么",
+          "next": "hidden_mezzanine",
+          "actions": [
+            {
+              "type": "advanceTime",
+              "amount": 1
+            },
+            {
+              "type": "adjust",
+              "key": "sanity",
+              "amount": -1
+            }
+          ]
+        },
+        {
+          "text": "先回灵堂，别让正位空太久",
+          "next": "mourning_hall",
+          "actions": [
+            {
+              "type": "advanceTime",
+              "amount": 1
+            }
+          ]
+        }
+      ]
+    },
+    "hidden_mezzanine": {
+      "title": "阁楼木箱",
+      "contentBlocks": [
+        {
+          "type": "secret",
+          "text": "阁楼木箱里压着一卷没烧掉的红绳、一张纸人底稿和一页婆婆亲笔遗嘱。遗嘱里写得很直白: 祠堂欠下的不是香火钱，是井里那个名字的归位。"
+        },
+        {
+          "type": "clue",
+          "text": "纸人底稿画着一副穿孝的侧脸，眉眼竟和你有七分像。"
+        }
+      ],
+      "choices": [
+        {
+          "text": "带着红绳和遗嘱，去井台背后照做",
+          "next": "spirit_trace",
+          "actions": [
+            {
+              "type": "advanceTime",
+              "amount": 1
+            },
+            {
+              "type": "gainItem",
+              "item": "红绳"
+            },
+            {
+              "type": "gainClue",
+              "clue": "婆婆遗嘱"
+            },
+            {
+              "type": "gainClue",
+              "clue": "纸人底稿"
+            },
+            {
+              "type": "adjust",
+              "key": "evidence",
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "text": "先拿着遗嘱回灵堂，对照空棺再说",
+          "next": "open_coffin",
+          "actions": [
+            {
+              "type": "advanceTime",
+              "amount": 1
+            },
+            {
+              "type": "gainItem",
+              "item": "红绳"
+            },
+            {
+              "type": "gainClue",
+              "clue": "婆婆遗嘱"
+            }
+          ]
+        },
+        {
+          "text": "趁楼上还有信号，把拍下来的东西先发给外地亲戚留底",
+          "next": "spirit_trace",
+          "tags": ["early_only"],
+          "actions": [
+            {
+              "type": "advanceTime",
+              "amount": 1
+            },
+            {
+              "type": "gainItem",
+              "item": "红绳"
+            },
+            {
+              "type": "gainClue",
+              "clue": "婆婆遗嘱"
+            },
+            {
+              "type": "adjust",
+              "key": "evidence",
+              "amount": 1
+            }
+          ]
+        }
+      ]
+    },
+    "open_coffin": {
+      "title": "空棺里的人形",
+      "contentBlocks": [
+        {
+          "type": "danger",
+          "text": "你撬开最后一枚棺钉，里面没有婆婆，只有一具用寿衣裹好的潮湿纸人。棺盖内侧是新鲜的四道抓痕，木屑边缘还沾着没干透的井水。"
+        },
+        {
+          "type": "ghost",
+          "text": "纸人脸上没描五官，只在额心点了一粒和你眉心位置一模一样的朱砂。"
+        }
+      ],
+      "choices": [
+        {
+          "text": "把抓痕记下，顺着棺底暗轨去井台背后",
+          "next": "spirit_trace",
+          "actions": [
+            {
+              "type": "advanceTime",
+              "amount": 1
+            },
+            {
+              "type": "gainClue",
+              "clue": "空棺划痕"
+            },
+            {
+              "type": "adjust",
+              "key": "evidence",
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "text": "趁现在还来得及，把棺盖重新钉死然后离开祠堂",
+          "next": "escape_end",
+          "tags": ["early_only"],
+          "confirmText": "你准备就这样把真相和祠堂一起关在身后。",
+          "irreversible": true,
+          "actions": [
+            {
+              "type": "advanceTime",
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "text": "拿着空棺里的线索折回回廊，再看看别处有没有对应的痕迹",
+          "next": "lantern_corridor",
+          "actions": [
+            {
+              "type": "advanceTime",
+              "amount": 1
+            },
+            {
+              "type": "gainClue",
+              "clue": "空棺划痕"
+            }
+          ]
+        }
+      ]
+    },
+    "spirit_trace": {
+      "title": "井台背后的暗格",
+      "contentBlocks": [
+        {
+          "type": "narrator",
+          "text": "井台背后藏着一道向下掀开的木板门，下面不是地窖，而是一截专门给人跪着走的小通道。通道尽头摆着一张空牌位，牌位后面贴着的旧符纸已经被水泡得发黑。"
+        },
+        {
+          "type": "clue",
+          "text": "这地方不像是给祖先留的，更像是给某个不准进门的人偷偷立的位。"
+        }
+      ],
+      "choices": [
+        {
+          "text": "如果铜铃还在，就把它挂回牌位前试着引它现身",
+          "next": "bell_ritual",
+          "conditions": {
+            "key": "items",
+            "op": "includes",
+            "value": "铜铃"
+          },
+          "disabledReason": "你还没拿到井绳上的铜铃，这里缺少最关键的引魂物。",
+          "actions": [
+            {
+              "type": "advanceTime",
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "text": "把手里几条线索拼成证据链，趁天没亮先送出村去",
+          "next": "truth_end",
+          "tags": ["precise"],
+          "conditions": {
+            "all": [
+              {
+                "key": "clues",
+                "op": "includes",
+                "value": "血账页"
+              },
+              {
+                "key": "clues",
+                "op": "includes",
+                "value": "婆婆遗嘱"
+              },
+              {
+                "key": "clues",
+                "op": "includes",
+                "value": "空棺划痕"
+              },
+              {
+                "key": "evidence",
+                "op": "gte",
+                "value": 3
+              }
+            ]
+          },
+          "disabledReason": "证据还没闭环，现在就送出去，只会变成你一个人的胡话。",
+          "actions": [
+            {
+              "type": "advanceTime",
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "text": "什么都不管了，趁它还没出来先逃离老宅",
+          "next": "escape_end",
+          "confirmText": "你准备放弃追查，只求今晚先活着离开。",
+          "irreversible": true,
+          "actions": [
+            {
+              "type": "advanceTime",
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "text": "井下那个声音开始叫你的乳名，你忍不住回了一声",
+          "next": "breakdown_end",
+          "conditions": {
+            "key": "sanity",
+            "op": "lte",
+            "value": 1
+          },
+          "disabledReason": "你还知道，先回应的一方会先丢掉自己的名字。",
+          "actions": [
+            {
+              "type": "advanceTime",
+              "amount": 1
+            }
+          ]
+        }
+      ]
+    },
+    "bell_ritual": {
+      "title": "铃响三声",
+      "contentBlocks": [
+        {
+          "type": "ghost",
+          "text": "铜铃一挂上去，井下的回声立刻从水声变成了脚步。第一声像是有人踩上井沿，第二声像是有人站到了你背后，第三声则像有人贴着你的耳后轻轻笑了一下。"
+        },
+        {
+          "type": "narrator",
+          "text": "婆婆遗嘱上写着，铃响三声后必须先决定它是归位，还是进门。再迟一步，它会自己选。"
+        }
+      ],
+      "choices": [
+        {
+          "text": "按遗嘱顺序系红绳，先把它拴回井口再谈名字",
+          "next": "thread_binding",
+          "tags": ["precise", "requires_incense"],
+          "conditions": {
+            "all": [
+              {
+                "key": "items",
+                "op": "includes",
+                "value": "红绳"
+              },
+              {
+                "key": "clues",
+                "op": "includes",
+                "value": "婆婆遗嘱"
+              },
+              {
+                "key": "incense",
+                "op": "gte",
+                "value": 1
+              }
+            ]
+          },
+          "disabledReason": "你要么没拿到红绳和遗嘱，要么香火已经断了，做不了这套安魂步骤。",
+          "actions": [
+            {
+              "type": "advanceTime",
+              "amount": 1
+            },
+            {
+              "type": "adjust",
+              "key": "incense",
+              "amount": -1
+            }
+          ]
+        },
+        {
+          "text": "不先封它，直接对着铜铃追问井里那个名字是谁",
+          "next": "truth_end",
+          "tags": ["precise"],
+          "conditions": {
+            "all": [
+              {
+                "key": "clues",
+                "op": "includes",
+                "value": "井底名字"
+              },
+              {
+                "key": "clues",
+                "op": "includes",
+                "value": "血账页"
+              },
+              {
+                "key": "clues",
+                "op": "includes",
+                "value": "婆婆遗嘱"
+              },
+              {
+                "key": "evidence",
+                "op": "gte",
+                "value": 4
+              }
+            ]
+          },
+          "disabledReason": "你还没凑够足够硬的名字和账证，直接逼问只会让它先学会你的声音。",
+          "actions": [
+            {
+              "type": "advanceTime",
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "text": "背后那个人开始学你说话，你还是回头了",
+          "next": "replacement_end",
+          "confirmText": "一旦回头，你就默认让它先记住你的脸。",
+          "irreversible": true,
+          "actions": [
+            {
+              "type": "advanceTime",
+              "amount": 1
+            }
+          ]
+        }
+      ]
+    },
+    "thread_binding": {
+      "title": "红绳过门",
+      "contentBlocks": [
+        {
+          "type": "narrator",
+          "text": "你按遗嘱把红绳一端系在井栏，一端系到那张空牌位上。铜铃被风一拽，井水里像有个湿透的人影跟着抬了抬手，却始终没越过门槛。"
+        },
+        {
+          "type": "safe",
+          "text": "这是今晚第一次，你感觉祠堂里的风不是朝你吹来的。"
+        }
+      ],
+      "choices": [
+        {
+          "text": "把空棺和空牌位接回灵堂，让它只认自己的名字不再认门",
+          "next": "seal_end",
+          "conditions": {
+            "all": [
+              {
+                "key": "clues",
+                "op": "includes",
+                "value": "井底名字"
+              },
+              {
+                "key": "clues",
+                "op": "includes",
+                "value": "空棺划痕"
+              }
+            ]
+          },
+          "disabledReason": "你还没弄清它和空棺之间的对应关系，现在接位只会把错的人请进门。",
+          "actions": [
+            {
+              "type": "advanceTime",
+              "amount": 1
+            },
+            {
+              "type": "loseItem",
+              "item": "红绳"
+            }
+          ]
+        },
+        {
+          "text": "趁它还被拴住，把旧账和遗嘱一起送出去揭开这笔债",
+          "next": "truth_end",
+          "conditions": {
+            "all": [
+              {
+                "key": "clues",
+                "op": "includes",
+                "value": "血账页"
+              },
+              {
+                "key": "clues",
+                "op": "includes",
+                "value": "婆婆遗嘱"
+              },
+              {
+                "key": "evidence",
+                "op": "gte",
+                "value": 4
+              }
+            ]
+          },
+          "disabledReason": "你还没把证据补到足以见光的地步，贸然揭开只会让活人继续把它按回井里。",
+          "actions": [
+            {
+              "type": "advanceTime",
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "text": "手一抖松了红绳，想转身就跑",
+          "next": "replacement_end",
+          "actions": [
+            {
+              "type": "advanceTime",
+              "amount": 1
+            }
+          ]
+        }
+      ]
+    },
+    "truth_end": {
+      "title": "把旧债送出门",
+      "contentBlocks": [
+        {
+          "type": "clue",
+          "text": "你没有再替祠堂遮掩，而是把血账页、遗嘱和空棺里的抓痕一起拍下送了出去。天刚蒙亮，外地亲戚和镇上派出所的人同时到了村口。"
+        },
+        {
+          "type": "narrator",
+          "text": "井里的那个名字终于不再只剩回声。祠堂的门面塌了半扇，但这一回，被拖出来见光的不只是死人。"
+        }
+      ],
+      "choices": [
+        {
+          "text": "重新开始这一夜",
+          "next": "intro",
+          "reset": true
+        },
+        {
+          "text": "返回大厅",
+          "next": "__lobby__"
+        }
+      ]
+    },
+    "seal_end": {
+      "title": "让它只认自己的名字",
+      "contentBlocks": [
+        {
+          "type": "safe",
+          "text": "你把空棺和空牌位重新接回灵堂，又把井底那个名字端端正正写了上去。铜铃最后只响了一下，像有人终于认出自己该待在哪里。"
+        },
+        {
+          "type": "narrator",
+          "text": "天亮时，井口重新封严，婆婆的牌位也没有再往井台方向偏。你没揭开所有旧事，但至少这栋老宅今后不必再拿活人的脸去补债。"
+        }
+      ],
+      "choices": [
+        {
+          "text": "重新开始这一夜",
+          "next": "intro",
+          "reset": true
+        },
+        {
+          "text": "返回大厅",
+          "next": "__lobby__"
+        }
+      ]
+    },
+    "escape_end": {
+      "title": "先活着走出去",
+      "contentBlocks": [
+        {
+          "type": "narrator",
+          "text": "你最终还是没把这夜里的事查到底，而是趁天还没亮透，翻出院门离开了老宅。村口第一声鸡叫响起时，你才敢回头。"
+        },
+        {
+          "type": "danger",
+          "text": "老宅安静得过分，像什么都没发生过。只有你手机录到的最后一段杂音里，清清楚楚多出了一声和你一模一样的应答。"
+        }
+      ],
+      "choices": [
+        {
+          "text": "重新开始这一夜",
+          "next": "intro",
+          "reset": true
+        },
+        {
+          "text": "返回大厅",
+          "next": "__lobby__"
+        }
+      ]
+    },
+    "replacement_end": {
+      "title": "纸人认门",
+      "contentBlocks": [
+        {
+          "type": "danger",
+          "text": "你回头的那一瞬，背后那个人已经把你的站姿、呼吸和说话停顿学得分毫不差。等鸡叫第二遍时，院门里外站着的两个人里，连你自己都说不清哪一个才先开了口。"
+        },
+        {
+          "type": "ghost",
+          "text": "后来村里人都说，祠堂头七那晚之后，老宅多了个很懂规矩的守夜人。他从不让第二炷香灭，也从不承认自己曾经离开过。"
+        }
+      ],
+      "choices": [
+        {
+          "text": "重新开始这一夜",
+          "next": "intro",
+          "reset": true
+        },
+        {
+          "text": "返回大厅",
+          "next": "__lobby__"
+        }
+      ]
+    },
+    "breakdown_end": {
+      "title": "先把自己的名字答了出去",
+      "contentBlocks": [
+        {
+          "type": "ghost",
+          "text": "你还是没忍住回了井里那一声。它并没有立刻爬出来，而是先把你的乳名、你的口音和你说“我在”的方式一样一样收了过去。"
+        },
+        {
+          "type": "danger",
+          "text": "天亮以后，活着离开老宅的人还是你。只是从那天起，每逢夜里有人轻轻叫你，你都会下意识先替井里那位答上一句。"
+        }
+      ],
+      "choices": [
+        {
+          "text": "重新开始这一夜",
+          "next": "intro",
+          "reset": true
+        },
+        {
+          "text": "返回大厅",
+          "next": "__lobby__"
+        }
+      ]
+    }
+  }
+}
