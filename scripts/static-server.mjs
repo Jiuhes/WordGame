@@ -20,7 +20,7 @@ const mimeTypes = {
 function resolvePath(urlPath) {
   const cleanPath = decodeURIComponent((urlPath || "/").split("?")[0]);
   const relativePath =
-    cleanPath === "/" ? "game.html" : cleanPath.replace(/^\/+/, "");
+    cleanPath === "/" ? "index.html" : cleanPath.replace(/^\/+/, "");
   return path.join(root, relativePath);
 }
 
