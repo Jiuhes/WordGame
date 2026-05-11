@@ -1,3 +1,113 @@
+const LOG_LEVELS = {
+  debug: 0,
+  info: 1,
+  warn: 2,
+  error: 3,
+};
+
+class Logger {
+  #minLevel;
+  #handlers;
+  #context;
+
+  constructor(minLevel = "info", handlers = ["console"], context = {}) {
+    this.#minLevel = LOG_LEVELS[minLevel] ?? LOG_LEVELS.info;
+    this.#handlers = handlers;
+    this.#context = context;
+  }
+
+  #shouldLog(level) {
+    return LOG_LEVELS[level] >= this.#minLevel;
+  }
+
+  #formatMessage(level, message, data) {
+    const timestamp = new Date().toISOString();
+    const contextStr = Object.keys(this.#context).length
+      ? ` [${Object.entries(this.#context)
+          .map(([k, v]) => `${k}=${v}`)
+          .join(", ")}]`
+      : "";
+    const dataStr = data !== undefined ? ` ${JSON.stringify(data)}` : "";
+    return `[${timestamp}] [${level.toUpperCase()}]${contextStr} ${message}${dataStr}`;
+  }
+
+  #log(level, message, data) {
+    if (!this.#shouldLog(level)) return;
+
+    const formatted = this.#formatMessage(level, message, data);
+
+    for (const handler of this.#handlers) {
+      switch (handler) {
+        case "console":
+          switch (level) {
+            case "debug":
+              console.debug(formatted);
+              break;
+            case "info":
+              console.info(formatted);
+              break;
+            case "warn":
+              console.warn(formatted);
+              break;
+            case "error":
+              console.error(formatted);
+              break;
+            default:
+              console.log(formatted);
+          }
+          break;
+        case "memory":
+          break;
+      }
+    }
+  }
+
+  debug(message, data) {
+    this.#log("debug", message, data);
+  }
+
+  info(message, data) {
+    this.#log("info", message, data);
+  }
+
+  warn(message, data) {
+    this.#log("warn", message, data);
+  }
+
+  error(message, data) {
+    this.#log("error", message, data);
+  }
+
+  setLevel(level) {
+    if (LOG_LEVELS[level] !== undefined) {
+      this.#minLevel = LOG_LEVELS[level];
+    }
+  }
+
+  setContext(context) {
+    this.#context = { ...this.#context, ...context };
+  }
+
+  child(context) {
+    return new Logger(
+      Object.keys(LOG_LEVELS).find((k) => LOG_LEVELS[k] === this.#minLevel) ||
+        "info",
+      this.#handlers,
+      { ...this.#context, ...context },
+    );
+  }
+}
+
+function createLogger(minLevel, handlers, context) {
+  return new Logger(minLevel, handlers, context);
+}
+
+export const logger = createLogger(
+  import.meta.env?.DEV ? "debug" : "error",
+  ["console"],
+  { app: "wordgame" },
+);
+
 export function escapeHtml(value) {
   return String(value)
     .replace(/&/g, "&amp;")
@@ -8,7 +118,39 @@ export function escapeHtml(value) {
 }
 
 export function clone(value) {
-  return JSON.parse(JSON.stringify(value));
+  if (value === null || value === undefined) {
+    return value;
+  }
+
+  if (typeof value !== "object") {
+    return value;
+  }
+
+  if (value instanceof Date) {
+    return new Date(value.getTime());
+  }
+
+  if (value instanceof RegExp) {
+    return new RegExp(value.source, value.flags);
+  }
+
+  if (value instanceof Map) {
+    return new Map(clone([...value]));
+  }
+
+  if (value instanceof Set) {
+    return new Set(clone([...value]));
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((item) => clone(item));
+  }
+
+  const cloned = {};
+  for (const key of Object.keys(value)) {
+    cloned[key] = clone(value[key]);
+  }
+  return cloned;
 }
 
 export function normalizeText(value) {
@@ -97,12 +239,40 @@ export function renderContentBlocks(blocks) {
     .join("");
 }
 
-export async function fetchJson(path) {
-  const response = await fetch(path, { cache: "no-store" });
-  if (!response.ok) {
-    throw new Error(`Failed to load ${path}: ${response.status}`);
+export async function fetchJson(path, options = {}) {
+  const { timeout = 10000, retries = 2 } = options;
+
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+      const response = await fetch(path, {
+        ...options,
+        signal: controller.signal,
+        cache: "no-store",
+      });
+
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        throw new Error(
+          `Failed to load ${path}: ${response.status} ${response.statusText}`,
+        );
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      if (error.name === "AbortError") {
+        throw new Error(`Request to ${path} timed out after ${timeout}ms`);
+      }
+
+      if (attempt === retries) {
+        throw error;
+      }
+    }
   }
-  return response.json();
 }
 
 export function clipText(value, maxLength) {

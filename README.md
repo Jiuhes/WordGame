@@ -14,13 +14,13 @@
 
 ## 启动方式
 
-这是一个静态前端项目，使用任意本地静态服务器打开 [game.html](d:/Code/Game/WordGame/game.html) 即可。
+这是一个静态前端项目，使用任意本地静态服务器打开 [index.html](index.html) 即可。
 
 如果只需要样式构建与内容校验，可直接运行：
 
 ```powershell
-npm.cmd run build:css
-npm.cmd run validate:content
+npm run build:css
+npm run validate:content
 ```
 
 ## 常用命令
